@@ -1,0 +1,42 @@
+[05-Mar-2026 09:55:36 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Non-static method Load::library() cannot be called statically in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php:12
+Stack trace:
+#0 /home/celsubuv/parion.celsusdata.com/bootstrap/route.php(141): Index->__construct()
+#1 /home/celsubuv/parion.celsusdata.com/bootstrap/bootstrap.php(36): Route::run()
+#2 /home/celsubuv/parion.celsusdata.com/index.php(5): require_once('/home/celsubuv/...')
+#3 {main}
+  thrown in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php on line 12
+[05-Mar-2026 09:55:39 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Non-static method Load::library() cannot be called statically in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php:12
+Stack trace:
+#0 /home/celsubuv/parion.celsusdata.com/bootstrap/route.php(141): Index->__construct()
+#1 /home/celsubuv/parion.celsusdata.com/bootstrap/bootstrap.php(36): Route::run()
+#2 /home/celsubuv/parion.celsusdata.com/index.php(5): require_once('/home/celsubuv/...')
+#3 {main}
+  thrown in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php on line 12
+[05-Mar-2026 09:55:41 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Non-static method Load::library() cannot be called statically in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php:12
+Stack trace:
+#0 /home/celsubuv/parion.celsusdata.com/bootstrap/route.php(141): Index->__construct()
+#1 /home/celsubuv/parion.celsusdata.com/bootstrap/bootstrap.php(36): Route::run()
+#2 /home/celsubuv/parion.celsusdata.com/index.php(5): require_once('/home/celsubuv/...')
+#3 {main}
+  thrown in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php on line 12
+[05-Mar-2026 10:04:55 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Non-static method Load::library() cannot be called statically in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php:12
+Stack trace:
+#0 /home/celsubuv/parion.celsusdata.com/bootstrap/route.php(141): Index->__construct()
+#1 /home/celsubuv/parion.celsusdata.com/bootstrap/bootstrap.php(36): Route::run()
+#2 /home/celsubuv/parion.celsusdata.com/index.php(5): require_once('/home/celsubuv/...')
+#3 {main}
+  thrown in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php on line 12
+[05-Mar-2026 10:05:53 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Non-static method Load::library() cannot be called statically in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php:12
+Stack trace:
+#0 /home/celsubuv/parion.celsusdata.com/bootstrap/route.php(141): Index->__construct()
+#1 /home/celsubuv/parion.celsusdata.com/bootstrap/bootstrap.php(36): Route::run()
+#2 /home/celsubuv/parion.celsusdata.com/index.php(5): require_once('/home/celsubuv/...')
+#3 {main}
+  thrown in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php on line 12
+[05-Mar-2026 10:05:55 Europe/Istanbul] PHP Fatal error:  Uncaught Error: Non-static method Load::library() cannot be called statically in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php:12
+Stack trace:
+#0 /home/celsubuv/parion.celsusdata.com/bootstrap/route.php(141): Index->__construct()
+#1 /home/celsubuv/parion.celsusdata.com/bootstrap/bootstrap.php(36): Route::run()
+#2 /home/celsubuv/parion.celsusdata.com/index.php(5): require_once('/home/celsubuv/...')
+#3 {main}
+  thrown in /home/celsubuv/parion.celsusdata.com/app/controllers/index.php on line 12

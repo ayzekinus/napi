@@ -1,0 +1,761 @@
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="hpanel" style="border: 1px solid #AAAEAF;">
+                <div class="panel-body no-padding" style="height: 60px !important;">
+                    <div class="pull-right" style="opacity:0.8;font-size: 36px;padding-top:2px;color: #6F7272 !important;">
+                        <i class="fa fa-lg fa-fw fa-cube"></i>
+                    </div>
+
+                    <div class="value-block pull-left"  style="color: #6F7272 !important;">
+                        <div class="value-self">1356</div>
+                        <div class="value-title">Anakod</div>
+                    </div>
+                </div>
+
+                <div class="panel-foot foot-blue">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="hpanel" style="border: 1px solid #AAAEAF;">
+                <div class="panel-body no-padding" style="height: 60px !important;">
+                    <div class="pull-right" style="opacity:0.8;font-size: 36px;padding-top:2px;color: #6F7272 !important;">
+                        <i class="fa fa-lg fa-fw fa-cubes"></i>
+                    </div>
+
+                    <div class="value-block pull-left"  style="color: #6F7272 !important;">
+                        <div class="value-self">11273</div>
+                        <div class="value-title">Buluntu</div>
+                    </div>
+                </div>
+
+                <div class="panel-foot foot-blue">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="hpanel" style="border: 1px solid #AAAEAF;">
+                <div class="panel-body no-padding" style="height: 60px !important;">
+                    <div class="pull-right" style="opacity:0.8;font-size: 36px;padding-top:2px;color: #6F7272 !important;">
+                        <i class="fa fa-lg fa-fw fa-file-text-o"></i>
+                    </div>
+
+                    <div class="value-block pull-left"  style="color: #6F7272 !important;">
+                        <div class="value-self">275</div>
+                        <div class="value-title">Açma Rapor</div>
+                    </div>
+                </div>
+
+                <div class="panel-foot foot-blue">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="hpanel" style="border: 1px solid #AAAEAF;">
+                <div class="panel-body no-padding" style="height: 60px !important;">
+                    <div class="pull-right" style="opacity:0.8;font-size: 36px;padding-top:2px;color: #6F7272 !important;">
+                        <i class="fa fa-lg fa-fw fa-envelope"></i>
+                    </div>
+
+                    <div class="value-block pull-left"  style="color: #6F7272 !important;">
+                        <div class="value-self">36</div>
+                        <div class="value-title">Evrak</div>
+                    </div>
+                </div>
+
+                <div class="panel-foot foot-blue">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-2">
+            <div class="hpanel" style="border: 1px solid #AAAEAF;">
+                <div class="panel-body no-padding" style="height: 60px !important;">
+                    <div class="pull-right" style="opacity:0.8;font-size: 36px;padding-right: 5px;padding-top:2px;color: #6F7272 !important;">
+                        <i class="fa fa-lg fa-sitemap"></i>
+                    </div>
+
+                    <div class="value-block pull-left"  style="color: #6F7272 !important;">
+                        <div class="value-self">3</div>
+                        <div class="value-title">Demirbaş</div>
+                    </div>
+                </div>
+
+                <div class="panel-foot foot-blue">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-2">
+            <div class="hpanel" style="border: 1px solid #AAAEAF;">
+                <div class="panel-body no-padding" style="height: 60px !important;">
+                    <div class="pull-right" style="opacity:0.8;font-size: 36px;padding-top:2px;color: #6F7272 !important;">
+                        <i class="fa fa-lg fa-fw fa-user"></i>
+                    </div>
+
+                    <div class="value-block pull-left"  style="color: #6F7272 !important;">
+                        <div class="value-self">23</div>
+                        <div class="value-title">Kullanıcı</div>
+                    </div>
+                </div>
+
+                <div class="panel-foot foot-blue">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- row -->
+    <div class="row">
+        <article class="col-sm-12">
+            <!-- new widget -->
+            <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+
+                <header>
+                    <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+                    <h2>İstatistikler </h2>
+
+                    <ul class="nav nav-tabs pull-right in" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Genel İstatistik</span></a>
+                        </li>
+
+                        <li>
+                            <a data-toggle="tab" href="#s2"> <i class="fa fa-star"></i> <span class="hidden-mobile hidden-tablet">Hareketler</span></a>
+                        </li>
+
+
+                    </ul>
+
+                </header>
+
+                <!-- widget div-->
+                <div class="no-padding">
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <div class="widget-body">
+                        <!-- content -->
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1">
+                                <div class="row no-space">
+
+                                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                        <div class="chart-content">
+                                            <div class="chart-category pull-left" style="">
+                                                <div id="chartContainer"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 show-stats">
+
+                                        <div class="row">
+                                            <div style="width: 100%; text-align:center;margin-bottom: 10px;"><span style="font-family: Verdana,sans;color: #49563A;font-size: 13px;font-weight: bold;line-height: 15.6px;fill: #49563A;">5 Yıllık Genel Toplam</span></div>
+                                            <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> 2014 yılı toplamı (19%)<span class="pull-right">738</span> </span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="opacity:0.7; background-color: #008ee4; width: 18.678815489749%;"></div>
+                                                </div> </div><div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> 2015 yılı toplamı (25%)<span class="pull-right">975</span> </span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="opacity:0.7; background-color: #6baa01; width: 24.677296886864%;"></div>
+                                                </div> </div><div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> 2016 yılı toplamı (21%)<span class="pull-right">846</span> </span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="opacity:0.7; background-color: #e44a00; width: 21.412300683371%;"></div>
+                                                </div> </div><div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> 2017 yılı toplamı (29%)<span class="pull-right">1158</span> </span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="opacity:0.7; background-color: #f8bd19; width: 29.309035687168%;"></div>
+                                                </div> </div><div class="col-xs-6 col-sm-6 col-md-12 col-lg-12"> <span class="text"> 2018 yılı toplamı (6%)<span class="pull-right">234</span> </span>
+                                                <div class="progress">
+                                                    <div class="progress-bar" style="opacity:0.7; background-color: #33bdda; width: 5.9225512528474%;"></div>
+                                                </div> </div><div class="col-xs-6 col-sm-6 col-md-12 col-lg-12" style="margin-left: 13px;width: 91.5%;padding: 4px 3px;font-size: 12px; background: rgb(240, 243, 237); border: 1px solid #ddd;">
+                                <div style="float:left;"><i class="fa fa-bar-chart-o"></i> Genel Toplam</div>
+                                <div style="float: right;">3951</div>
+                            </div>                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row no-space">
+                                    <div id="chart-container"></div>
+                                </div>
+
+                            </div>
+                            <!-- end s1 tab pane -->
+
+                            <div class="tab-pane fade" id="s2">
+                              
+                                <div class="padding-10">
+
+                                </div>
+
+                            </div>
+                            <!-- end s2 tab pane -->
+
+                           
+                            <!-- end s3 tab pane -->
+                        </div>
+
+                        <!-- end content -->
+                    </div>
+
+                </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+
+        </article>
+    </div>
+
+    <!-- end row -->
+
+    <!-- row -->
+
+    <div class="row">
+
+        <article class="col-sm-12 col-md-12 col-lg-6">
+
+          
+            <!-- end widget -->
+
+            <!-- new widget -->
+            <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-colorbutton="false">
+
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+                    <h2> Takvim </h2>
+                    <div class="widget-toolbar">
+                        <!-- add: non-hidden - to disable auto hide -->
+                        <div class="btn-group">
+                            <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
+                                Göster <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul class="dropdown-menu js-status-update pull-right">
+                                <li>
+                                    <a href="javascript:void(0);" id="mt">Aylar</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="ag">Ajanda</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="td">Bugün</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- widget div-->
+                <div>
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+
+                        <input class="form-control" type="text">
+
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <div class="widget-body no-padding">
+                        <!-- content goes here -->
+                        <div class="widget-body-toolbar">
+
+                            <div id="calendar-buttons">
+
+                                <div class="btn-group">
+                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="calendar"></div>
+
+                        <!-- end content -->
+                    </div>
+
+                </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+
+        </article>
+
+        <article class="col-sm-12 col-md-12 col-lg-6">
+
+            <!-- new widget -->
+           
+            <!-- end widget -->
+
+            <!-- new widget -->
+            <div class="jarviswidget jarviswidget-color-blue" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
+
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
+                    <h2> Yapılacaklar Listesi </h2>
+                    <!-- <div class="widget-toolbar">
+                    add: non-hidden - to disable auto hide
+
+                    </div>-->
+                </header>
+
+                <!-- widget div-->
+                <div>
+                    <!-- widget edit box -->
+                    <div class="jarviswidget-editbox">
+                        <div>
+                            <label>Başlık:</label>
+                            <input type="text" />
+                        </div>
+                    </div>
+                    <!-- end widget edit box -->
+
+                    <div class="widget-body no-padding smart-form">
+                      
+                        <h5 class="todo-group-title"><i class="fa fa-exclamation"></i> Yapılacaklar </h5>
+                        <ul id="sortable2" class="todo">
+                            <li>
+                                <span class="handle"> <label class="checkbox">
+                                        <input type="checkbox" name="checkbox-inline">
+                                            <i></i> </label> </span>
+                                <p>
+                                    Sistem güncellemekeri yapılacak..<span class="date">Eyl 16, 2015</span>
+                                </p>
+                            </li>
+                            <li>
+                                <span class="handle"> <label class="checkbox">
+                                        <input type="checkbox" name="checkbox-inline">
+                                            <i></i> </label> </span>
+                                <p>
+                                   Hatalı alanlar kontrol edilecek.
+                                    <span class="date">Eyl 22, 2015</span>
+                                </p>
+                            </li>
+                            <li>
+                                <span class="handle"> <label class="checkbox">
+                                        <input type="checkbox" name="checkbox-inline">
+                                            <i></i> </label> </span>
+                                <p>
+                                    Sistem demosu hazırlanacak.. <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
+                                    <span class="date">Eki 1, 2015</span>
+                                </p>
+                            </li>
+                        </ul>
+
+                        <h5 class="todo-group-title"><i class="fa fa-check"></i> Tamamlananlar </h5>
+                        <ul id="sortable3" class="todo">
+                            <li class="complete">
+                                <span class="handle"> <label class="checkbox state-disabled" style="display:none">
+                                        <input type="checkbox" name="checkbox-inline" checked="checked" disabled="disabled">
+                                            <i></i> </label> </span>
+                                <p>
+                                    Veritabanı optimizasyonu yapılacak. 
+                                    <span class="date">Eyl 15, 2015</span>
+                                </p>
+                            </li>
+                        </ul>
+
+                        <!-- end content -->
+                    </div>
+
+                </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+
+        </article>
+
+    </div>
+
+    <!-- end row -->
+
+</section>
+<!-- end widget grid -->
+
+<script type="text/javascript" src="https://parion.celsusdata.com/assets/js/fusioncharts/fusioncharts.js"></script>
+<script type="text/javascript" src="https://parion.celsusdata.com/assets/js/fusioncharts/themes/fusioncharts.theme.fint.js"></script>
+
+<script type="text/javascript">
+
+
+    FusionCharts.ready(function() {
+        var chart = new FusionCharts({
+            "type": "mscolumn3d",
+            "renderAt": "chartContainer",
+            "width": "100%",
+            "height": "300",
+            "dataFormat": "json",
+            "dataSource": {
+                "chart": {
+                    "caption": "Son 5 Yılın Buluntu İstatistikleri",
+                    "yaxisname": "Buluntu Sayısı",
+                    "formatNumber": "1",
+                    "formatNumberScale": "0",
+                    "decimalSeparator": ",",
+                    "thousandSeparator": ".",
+                    "bgcolor": "#FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "showvalues": "1",
+                    "labeldisplay": "1",
+                    "divlinecolor": "#CCCCCC",
+                    "divlinealpha": "70",
+                    "useroundedges": "1",
+                    "canvasbgcolor": "#FFFFFF",
+                    "canvasbasecolor": "#CCCCCC",
+                    "showcanvasbg": "0",
+                    "animation": "1",
+                    "palettecolors": "#008ee4,#6baa01,#e44a00,#f8bd19,#33bdda,#F0B67F,#6B818C,#B09398,#D8E4FF,#D5DE8B,#CFD2B2,#E0D8DE,#FEF6C9,#EEF5DB,#802C3E,#A05125,#F2F79E,#92B9BD,#F2F79E,#C8ACAB,#B68F9D,#A690A4",
+                    "showborder": "0",
+                    "legendshadow": "0",
+                    "legendborderalpha": "50",
+                    "canvasborderthickness": "1",
+                    "canvasborderalpha": "50",
+                    "placevaluesinside": "1",
+                    "rotatevalues": "1"
+                },
+                "categories": [{"category": [{"label":"Nekropol"},{"label":"Odeion"},{"label":"Roma Hamam\u0131"},{"label":"Tiyatro"},{"label":"Yama\u00e7 Hamam\u0131"}]}],"dataset": [{"seriesname": "2014","data": [{"value":""},{"value":"129"},{"value":"263"},{"value":"173"},{"value":"43"},{"value":""}]},{"seriesname": "2015","data": [{"value":"39"},{"value":"162"},{"value":"89"},{"value":"415"},{"value":"188"},{"value":""}]},{"seriesname": "2016","data": [{"value":"36"},{"value":"203"},{"value":"77"},{"value":"258"},{"value":"199"},{"value":""}]},{"seriesname": "2017","data": [{"value":"113"},{"value":"155"},{"value":"498"},{"value":"53"},{"value":"80"},{"value":""}]},{"seriesname": "2018","data": [{"value":""},{"value":"36"},{"value":"52"},{"value":""},{"value":"56"},{"value":""}]}]            }
+        }).render();
+    });
+
+    const dataSource = {
+        "chart": {
+            "caption": "Yıllara göre buluntu sayısı",
+            "subcaption": "",
+            "formatNumberScale": "0",
+            "decimalSeparator": ",",
+            "thousandSeparator": ".",
+            "showvalues": "1",
+            "numvisibleplot": "12",
+            "plottooltext": "$label yılında toplam <b>$dataValue</b> buluntu mevcut",
+            "theme": "fusion"
+        },
+        "categories": [{"category": [{"label":"2006"},{"label":"2007"},{"label":"2008"},{"label":"2009"},{"label":"2010"},{"label":"2011"},{"label":"2012"},{"label":"2013"},{"label":"2014"},{"label":"2015"},{"label":"2016"},{"label":"2017"},{"label":"2018"}]}],"dataset": [{"data": [{"value":"6"},{"value":"498"},{"value":"501"},{"value":"677"},{"value":"964"},{"value":"1439"},{"value":"1160"},{"value":"2056"},{"value":"738"},{"value":"975"},{"value":"846"},{"value":"1158"},{"value":"234"}]}]    };
+
+    FusionCharts.ready(function() {
+        var myChart = new FusionCharts({
+            type: "scrollarea2d",
+            renderAt: "chart-container",
+            width: "100%",
+            height: "100%",
+            dataFormat: "json",
+            dataSource
+        }).render();
+    });
+
+    var calendar;
+
+    pageSetUp();
+
+    /*
+     * PAGE RELATED SCRIPTS
+     */
+
+    // pagefunction
+
+    var pagefunction = function() {
+
+
+        $(".js-status-update a").click(function() {
+            var selText = $(this).text();
+            var $this = $(this);
+            $this.parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
+            $this.parents('.dropdown-menu').find('li').removeClass('active');
+            $this.parent().addClass('active');
+        });
+
+        /*
+         * TODO: add a way to add more todo's to list
+         */
+
+        // initialize sortable
+
+        $("#sortable1, #sortable2").sortable({
+            handle: '.handle',
+            connectWith: ".todo",
+            update: countTasks
+        }).disableSelection();
+
+
+        // check and uncheck
+        $('.todo .checkbox > input[type="checkbox"]').click(function() {
+            var $this = $(this).parent().parent().parent();
+
+            if ($(this).prop('checked')) {
+                $this.addClass("complete");
+
+                // remove this if you want to undo a check list once checked
+                //$(this).attr("disabled", true);
+                $(this).parent().hide();
+
+                // once clicked - add class, copy to memory then remove and add to sortable3
+                $this.slideUp(500, function() {
+                    $this.clone().prependTo("#sortable3").effect("highlight", {}, 800);
+                    $this.remove();
+                    countTasks();
+                });
+            } else {
+                // insert undo code here...
+            }
+
+        })
+        // count tasks
+        function countTasks() {
+
+            $('.todo-group-title').each(function() {
+                var $this = $(this);
+                $this.find(".num-of-tasks").text($this.next().find("li").size());
+            });
+
+        }
+
+
+        /*
+         * FULL CALENDAR JS
+         */
+
+        // Load Calendar dependency then setup calendar
+
+        loadScript("https://parion.celsusdata.com/assets/js/plugin/moment/moment.min.js", function() {
+            loadScript("https://parion.celsusdata.com/assets/js/plugin/fullcalendar/jquery.fullcalendar.min.js", setupCalendar);
+        });
+
+        function setupCalendar() {
+
+            if ($("#calendar").length) {
+                var date = new Date();
+                var d = date.getDate();
+                var m = date.getMonth();
+                var y = date.getFullYear();
+
+                calendar = $('#calendar').fullCalendar({
+                    editable: true,
+                    draggable: true,
+                    selectable: false,
+                    selectHelper: true,
+                    unselectAuto: false,
+                    disableResizing: false,
+                    header: {
+                        left: 'title', //,today
+                        center: 'prev, next, today',
+                        right: 'month, agendaWeek, agenDay' //month, agendaDay,
+                    },
+                    select: function(start, end, allDay) {
+                        var title = prompt('Event Title:');
+                        if (title) {
+                            calendar.fullCalendar('renderEvent', {
+                                title: title,
+                                start: start,
+                                end: end,
+                                allDay: allDay
+                            }, true // make the event "stick"
+                                    );
+                        }
+                        calendar.fullCalendar('unselect');
+                    },
+                    events: [{
+                            title: 'Sistem Bakımı',
+                            start: new Date(y, m, 1),
+                            description: 'long description',
+                            className: ["event", "bg-color-greenLight"],
+                            icon: 'fa-check'
+                        }, {
+                            title: 'Genel Toplantı',
+                            start: new Date(y, m, d - 5),
+                            end: new Date(y, m, d - 2),
+                            className: ["event", "bg-color-red"],
+                            icon: 'fa-lock'
+                        }],
+                    eventRender: function(event, element, icon) {
+                        if (!event.description == "") {
+                            element.find('.fc-event-title').append("<br/><span class='ultra-light'>" + event.description +
+                                    "</span>");
+                        }
+                        if (!event.icon == "") {
+                            element.find('.fc-event-title').append("<i class='air air-top-right fa " + event.icon +
+                                    " '></i>");
+                        }
+                    }
+                });
+
+            }
+            ;
+
+            /* hide default buttons */
+            $('.fc-header-right, .fc-header-center').hide();
+
+        }
+
+        // calendar prev
+        $('#calendar-buttons #btn-prev').click(function() {
+            $('.fc-button-prev').click();
+            return false;
+        });
+
+        // calendar next
+        $('#calendar-buttons #btn-next').click(function() {
+            $('.fc-button-next').click();
+            return false;
+        });
+
+        // calendar today
+        $('#calendar-buttons #btn-today').click(function() {
+            $('.fc-button-today').click();
+            return false;
+        });
+
+        // calendar month
+        $('#mt').click(function() {
+            $('#calendar').fullCalendar('changeView', 'month');
+        });
+
+        // calendar agenda week
+        $('#ag').click(function() {
+            $('#calendar').fullCalendar('changeView', 'agendaWeek');
+        });
+
+        // calendar agenda day
+        $('#td').click(function() {
+            $('#calendar').fullCalendar('changeView', 'agendaDay');
+        });
+
+        /*
+         * CHAT
+         */
+
+        var filter_input = $('#filter-chat-list'),
+                chat_users_container = $('#chat-container > .chat-list-body'),
+                chat_users = $('#chat-users'),
+                chat_list_btn = $('#chat-container > .chat-list-open-close');
+                
+
+        /*
+         * LIST FILTER (CHAT)
+         */
+
+        // custom css expression for a case-insensitive contains()
+        jQuery.expr[':'].Contains = function(a, i, m) {
+            return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+        };
+
+        function listFilter(list) {
+            // header is any element, list is an unordered list
+            // create and add the filter form to the header
+
+            filter_input.change(function() {
+                var filter = $(this).val();
+                if (filter) {
+                    // this finds all links in a list that contain the input,
+                    // and hide the ones not containing the input while showing the ones that do
+                    chat_users.find("a:not(:Contains(" + filter + "))").parent().slideUp();
+                    chat_users.find("a:Contains(" + filter + ")").parent().slideDown();
+                } else {
+                    chat_users.find("li").slideDown();
+                }
+                return false;
+            }).keyup(function() {
+                // fire the above change event after every letter
+                $(this).change();
+
+            });
+
+        }
+
+        // on dom ready
+        listFilter(chat_users);
+
+      
+
+    };
+
+    // end pagefunction
+
+    // destroy generated instances 
+    // pagedestroy is called automatically before loading a new page
+    // only usable in AJAX version!
+
+    var pagedestroy = function() {
+
+        // destroy calendar
+        calendar.fullCalendar('destroy');
+        calendar = null;
+
+        //destroy flots
+        flot_updating_chart.shutdown();
+        flot_updating_chart = null;
+        flot_statsChart.shutdown();
+        flot_statsChart = null;
+
+        flot_multigraph.shutdown();
+        flot_multigraph = null;
+
+        // destroy vector map objects
+        $('#vector-map').find('*').addBack().off().remove();
+
+        // destroy todo
+        $("#sortable1, #sortable2").sortable("destroy");
+        $('.todo .checkbox > input[type="checkbox"]').off();
+
+        // destroy misc events
+        $("#rev-toggles").find(':checkbox').off();
+        $('#chat-container').find('*').addBack().off().remove();
+
+        // debug msg
+        if (debugState) {
+            root.console.log("✔ Calendar, Flot Charts, Vector map, misc events destroyed");
+        }
+
+    }
+
+    // end destroy
+
+    // run pagefunction on load
+    pagefunction();
+
+
+</script>

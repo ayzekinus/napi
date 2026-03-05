@@ -1,0 +1,1874 @@
+<?php
+
+class Index extends Controller
+{
+
+    var $sql;
+
+    function __construct()
+    {
+        parent::__construct();
+
+        load::library('session');
+
+        if (!@Session::get('oturum')) {
+            load::view('giris');
+            die();
+        }
+
+        $this->sql = Sql::getInstance();
+        $this->session_check();
+    }
+
+    function home()
+    {
+        load::view('index');
+    }
+
+    function anasayfa()
+    {
+
+        //$cache = load::library('cache');
+        //$cache->start(12);
+
+        $x = @$this->sql->query('select count(*) as adet from anakod', false,false);
+        $data['anakod_toplam'] = $x->adet;
+
+        $x = @$this->sql->query('select count(*) as adet from buluntu_karti', false,false);
+        $data['buluntu_toplam'] = $x->adet;
+
+        $x = @$this->sql->query('select count(*) as adet from acma_rapor', false,false);
+        $data['acmarapor_toplam'] = $x->adet;
+
+        $x = @$this->sql->query('select count(*) as adet from evrak_yonetimi', false,false);
+        $data['evrak_toplam'] = $x->adet;
+
+        $x = @$this->sql->query('select count(*) as adet from demirbas_listesi', false,false);
+        $data['demirbas_toplam'] = $x->adet;
+
+        $x = @$this->sql->query('select count(*) as adet from _kullanici', false,false);
+        $data['kullanici_toplam'] = $x->adet;
+
+
+        $loglar = $this->sql->select('data_title, data_cat, islem_tip, adsoyad,  tarih, islem')->from('islem_gecmisi')->where("data_title != ''")->orderBy('log_id DESC')->limit(15)->getAll();
+        $d = '';
+        foreach($loglar as $log){
+
+            $c = 'color: #4B8230;';
+            if($log->islem == 2)
+                $c = 'color: #99783B';
+
+            $d .= '<tr style="'.$c.'"><td>'.$log->data_title.'</td><td><span class="row_kayit_tipi">'.$log->data_cat.'</span></td><td>'.$log->islem_tip.'</td><td>'.$log->adsoyad.'</td><td>'.$log->tarih.'</td></tr>';
+        }
+
+        $data['loglar'] = $d;
+
+        $data['kullanici_log'] = $this->sql->from('_kullanici_log as l')->leftJoin('_kullanici as k','k._kullanici = l.user')->where('l.hata = 0')->limit(15)->orderBy('l.ID DESC')->getAll();
+        $data['kullanici_log_hata'] = $this->sql->from('_kullanici_log as l')->where('l.hata = 1')->limit(15)->orderBy('l.ID DESC')->getAll();
+
+
+        load::view('ajax/anasayfa', $data);
+        //$cache->finish();
+    }
+
+    function token(){
+        # ckeditor kullaniyor..
+        echo time();
+    }
+
+
+    /* KULLANICILAR */
+
+    function kullanicilar()
+    {
+        $this->sec('kullanicilar');
+        load::view('ajax/kullanicilar');
+    }
+
+    function kullanicilar_data()
+    {
+        $this->sec('kullanicilar_data');
+        $this->datatables = load::library('datatable');
+        $this->datatables->select('ID, adsoyad, _kullanici, online, giris_tarihi, olusturulma_tarihi, yetki, durum')
+            ->from('_kullanici');
+
+        $this->datatables->edit_column('ID', '$1', 'ID')
+            ->edit_column('adsoyad', '$1', 'adsoyad')
+            ->edit_column('_kullanici', '$1', '_kullanici')
+            ->edit_column('online', '$1', 'online')
+            ->edit_column('giris_tarihi', '$1', 'giris_tarihi')
+            ->edit_column('olusturulma_tarihi', '$1', 'olusturulma_tarihi')
+            ->edit_column('yetki', '$1', 'yetki')
+            ->edit_column('durum', '$1', 'durum');
+
+        echo $this->datatables->generate();
+    }
+
+    function kullanici_ekle()
+    {
+        $this->sec('kullanici_ekle');
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        load::view('modal/kullanici_ekle',$data);
+    }
+
+    function kullanici_duzenle($id = null)
+    {
+        $this->sec('kullanici_duzenle');
+        if(!is_numeric($id)){ die(); }
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $data['q'] = $this->sql->from('_kullanici')->where("ID = $id")->get();
+
+        load::view('modal/kullanici_duzenle', $data);
+    }
+
+
+    /* ANAKOD */
+
+
+    function anakod_ekle()
+    {
+        $this->sec('anakod_ekle');
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        load::view('modal/anakod_ekle', $data);
+    }
+
+    function anakod_duzenle($id = null)
+    {
+        $this->sec('anakod_duzenle');
+
+        if(!is_numeric($id)){ die(); }
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $x = $this->sql->from('anakod')->where("anakod_id = $id")->get();
+        $data['q'] = $x;
+
+        $data['lb_buluntu_yeri'] = $this->sql->from('list_data')->where("list_id = $x->anakod_buluntuyeri_id")->get();
+
+        load::view('modal/anakod_duzenle', $data);
+    }
+
+    function anakod_listesi()
+    {
+        $this->sec('anakod_listesi');
+        load::view('ajax/anakod_listesi');
+    }
+
+    function anakod_listesi_data()
+    {
+        $this->sec('anakod_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('a.anakod_id,  a.anakod, l.list_adi, a.buluntu_yili, a.plankare, a.tabaka, a.seviye, a.mezarno, a.durum')
+            ->from('anakod as a')
+            ->leftJoin('list_data as l', 'a.anakod_buluntuyeri_id = l.list_id')->orderBy('a.anakod_id DESC');
+
+        $this->datatables->edit_column('a.anakod_id', '$1', 'a.anakod_id')
+            ->edit_column('a.anakod', '$1', 'a.anakod')
+            ->edit_column('l.list_adi', '$1', 'l.list_adi')
+            ->edit_column('a.buluntu_yili', '$1', 'a.buluntu_yili')
+            ->edit_column('a.plankare', '$1', 'a.plankare')
+            ->edit_column('a.tabaka', '$1', 'a.tabaka')
+            ->edit_column('a.seviye', '$1', 'a.seviye')
+            ->edit_column('a.mezarno', '$1', 'a.mezarno')
+            ->edit_column('a.durum', '$1', 'a.durum');
+
+        echo $this->datatables->cache(0)->generate();
+    }
+
+    function anakod_detay($id = null, $print = 0)
+    {
+        $this->sec('anakod_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        #Anakod detay
+        $x = $this->sql->from('anakod')->where("anakod_id = $id")->get();
+        $data['q'] = $x;
+
+        #Buluntu Yeri bilgisi
+        $by = @$this->sql->from('list_data')->where('list_id = ' . $x->anakod_buluntuyeri_id)->get();
+        $data['by'] = $by->list_adi;
+
+        #Buluntu sayisi
+        $count = @$this->sql->query('SELECT count(*) as adet from buluntu_karti where bk_anakod_id = ' . $id,false,false);
+        $data['count'] = $count->adet;
+
+        if($print == 0){
+            #Log detay
+            $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'anakod' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+            $data['log'] = $log;
+            $data['logGoster'] = false;
+
+            if($this->sql->count() > 0){
+
+                #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+                if(is_numeric($log->kullanici_id)){
+                    $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                    $data['user'] = $user->adsoyad;
+                    $data['logGoster'] = true;
+                }
+            }
+
+            $ilk = $id - 9;
+            if($ilk < 0) {
+                $ilk = 1;
+            }
+
+            if($id <= 10){
+                $son = $id + (17-$id);
+            }else{
+                $son = $id + 7;
+            }
+
+            #Kendisinden onceki ve sonraki 9 kayit (kendisi dahil)
+            $ilkGetir = $this->sql->select('anakod_id, anakod')->from('anakod')->where("anakod_id BETWEEN $ilk AND $son")->getAll();
+
+            $ilkData = '';
+            foreach($ilkGetir as $ilk){
+                if($id == $ilk->anakod_id){
+                    $sec = ' class="active"';
+                }else{$sec = '';}
+                $ilkData .= '<li '.$sec.'><a href="#" data-id="'.$ilk->anakod_id.'">'.$ilk->anakod.'</a></li>';
+            }
+
+            $data['anakodPage'] = $ilkData;
+
+            load::view('modal/anakod_detay', $data);
+
+        }else{
+            load::view('modal/anakod_print', $data);
+        }
+    }
+
+
+    /* BULUNTU */
+
+    function buluntu_ekle($id = null)
+    {
+        $this->sec('buluntu_ekle');
+
+        if (is_numeric($id)){
+            $x = $this->sql->from('anakod')->where("anakod_id = $id")->get();
+            $data['q'] = $x;
+            $data['id'] = $id;
+
+            $min = $id - 5;
+            $max = $id + 5;
+
+            $anakod_where = "anakod_id BETWEEN $min AND $max";
+            $anakod_data =$this->sql->select('anakod_id, anakod')->from('anakod')->where($anakod_where)->orderBy('anakod_id DESC')->limit(10)->getAll();
+
+            $data['lb_buluntu_yeri'] = $this->acilir_liste_getir(1, true, @$x->anakod_buluntuyeri_id);
+
+        }else{
+            $anakod_data =$this->sql->select('anakod_id, anakod')->from('anakod')->orderBy('anakod_id DESC')->limit(10)->getAll();
+        }
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        $data['anakod'] = $anakod_data;
+
+        load::view('modal/buluntu_ekle', $data);
+    }
+
+    function buluntu_duzenle($id = null)
+    {
+        $this->sec('buluntu_duzenle');
+
+        if(!is_numeric($id)){ die(); }
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $x = $this->sql->from('buluntu_karti')->where("bk_id = $id")->get();
+        $data['q'] = $x;
+
+        $data['galeri'] = $this->sql->from('buluntu_galeri')->where('bk_id = '. $id)->getAll();
+        $data['anakod'] = $this->sql->select('anakod_id, anakod')->from('anakod')->where("anakod_id = $x->bk_anakod_id")->orderBy('anakod ASC')->get();
+
+        $data['lb_buluntu_yeri'] = $this->sql->from('list_data')->where("list_id = $x->bk_buluntuyeri_id")->get();
+        $data['lb_formobje'] = $this->sql->from('list_data')->where("list_id = $x->bk_formobje_id")->get();
+        $data['lb_yapimmalzemesi'] = $this->sql->from('list_data')->where("list_id = $x->bk_yapim_mlz_id")->get();
+        $data['lb_uretimyeri'] = $this->sql->from('list_data')->where("list_id = $x->bk_uretimyeri_id")->get();
+        $data['lb_donem'] = $this->sql->from('list_data')->where("list_id = $x->bk_donem_id")->get();
+        $data['lb_tip'] = $this->sql->from('list_data')->where("list_id = $x->bk_tip_id")->get();
+        $data['lb_renk_hamur'] = $this->sql->from('list_data')->where("list_id = $x->bk_hamur_renk_id")->get();
+        $data['lb_renk_astar'] = $this->sql->from('list_data')->where("list_id = $x->bk_astar_renk_id")->get();
+
+
+        load::view('modal/buluntu_duzenle', $data);
+    }
+
+    function buluntu_listesi()
+    {
+        $this->sec('buluntu_listesi');
+
+        load::view('ajax/buluntu_listesi');
+    }
+
+    function buluntu_listesi_data()
+    {
+        $this->sec('buluntu_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('bk_id, anakod, buluntu_no, buluntu_yeri, yapim_malzemesi, buluntu_tarihi, donem, formobje, tip, eser_tarihi, plankare, tabaka, seviye, durum, envanterlik')
+            ->from('buluntu_listesi')->orderBy('bk_id DESC');
+
+        $this->datatables->edit_column('bk_id', '$1', 'bk_id')
+            ->edit_column('anakod', '$1', 'anakod')
+            ->edit_column('buluntu_no', '$1', 'buluntu_no')
+            ->edit_column('buluntu_yeri', '$1', 'buluntu_yeri')
+            ->edit_column('yapim_malzemesi', '$1', 'yapim_malzemesi')
+            ->edit_column('buluntu_tarihi', '$1', 'buluntu_tarihi')
+            ->edit_column('donem', '$1', 'donem')
+            ->edit_column('formobje', '$1', 'formobje')
+            ->edit_column('tip', '$1', 'tip')
+            ->edit_column('eser_tarihi', '$1', 'eser_tarihi')
+            ->edit_column('plankare', '$1', 'plankare')
+            ->edit_column('tabaka', '$1', 'tabaka')
+            ->edit_column('seviye', '$1', 'seviye')
+            ->edit_column('durum', '$1', 'durum')
+            ->edit_column('envanterlik', '$1', 'envanterlik');
+
+        echo $this->datatables->generate();
+    }
+
+    function buluntu_listesi_galeri()
+    {
+        $this->sec('buluntu_listesi');
+
+
+
+        /*
+         *
+         *
+
+        select `bg`.`bk_id` AS `bk_id`,`a`.`anakod` AS `anakod`,`bye`.`list_adi` AS `buluntu_yeri`,lpad(`bk`.`buluntu_no`,4,0) AS `buluntu_no`,`fo`.`list_adi` AS `formobje`,`bk`.`buluntu_tarihi` AS `buluntu_tarihi`,`bg`.`dosya` AS `dosya`,  bk.bk_buluntuyeri_id, bk.bk_formobje_id, bk.bk_yapim_mlz_id from ((((`buluntu_galeri` `bg` join `buluntu_karti` `bk` on((`bk`.`bk_id` = `bg`.`bk_id`))) join `list_data` `bye` on((`bye`.`list_id` = `bk`.`bk_buluntuyeri_id`))) join `anakod` `a` on((`a`.`anakod_id` = `bk`.`bk_anakod_id`))) join `list_data` `fo` on((`fo`.`list_id` = `bk`.`bk_formobje_id`))) group by `bg`.`bk_id` order by `bg`.`bk_id` desc
+
+         *
+         * */
+
+
+        //@$this->sql->from('buluntu_galeri_view')->getAll();
+        //$data['toplam_adet'] = $this->sql->count();
+        $data['galeri'] = $this->sql->from('buluntu_galeri_view')->limit(25)->getAll();
+
+        $data['yillar'] = $this->sql->query('SELECT DISTINCT buluntu_yili FROM rp_yillara_gore_buluntu order by buluntu_yili', true,false);
+
+
+        load::view('ajax/buluntu_listesi_galeri', $data);
+    }
+
+
+    function buluntu_listesi_galeri_data(){
+        //$this->sec('buluntu_listesi');
+
+        $parameters = array();
+
+
+        $buluntu_yeri = implode(',',$_POST['buluntu_yeri']);
+        $formobje = implode(',', $_POST['form_obje']);
+        $yapim_malzemesi = implode(',',$_POST['yapim_malzemesi']);
+        $buluntu_yili = implode(',',$_POST['buluntu_yili']);
+
+
+        if(isset($buluntu_yeri)) $parameters[0] = 'bk_buluntuyeri_id IN(' . $buluntu_yeri . ')';
+        if(isset($yapim_malzemesi)) $parameters[1] = 'bk_yapim_mlz_id IN(' . $yapim_malzemesi . ')';
+        if(isset($buluntu_yili) && $buluntu_yili != '') $parameters[2] = 'SUBSTRING(buluntu_tarihi,-4,4) IN( ' . $buluntu_yili . ')';
+        if(isset($formobje)) $parameters[3] = 'bk_formobje_id IN(' . $formobje . ')';
+
+
+        $where = implode(' AND ', $parameters);
+        $where = '  WHERE ' . $where . " AND SUBSTRING(buluntu_tarihi,-4,4) != ''";
+
+        if(count($parameters) < 1) {$where = '';}
+
+        $query = 'SELECT * from buluntu_galeri_view' . $where . ' LIMIT 25';
+        $galeri = $this->sql->query($query, true, false);
+
+
+        $veri = '';
+
+        foreach($galeri as $g){
+            $veri .= '<img src="'.Url::base('uploads/images/thumb/'.$g->dosya).'" data-tooltip="<b>Anakod: </b> '.$g->anakod.' <br/> <b>Buluntu No: </b> '.$g->buluntu_no.' <br/><b>Buluntu Yeri: </b>'. $g->buluntu_yeri.' <br/> <b>Buluntu Tarihi: </b> '. $g->buluntu_tarihi.'<br/><b>Form/Obje: </b> '.$g->formobje.'">';
+        }
+
+
+        $random = time();
+        $div = '<style type="text/css">.galeri_icerik_'.$random.'{width: 100%; margin: 0px; padding: 0px; overflow: hidden !important; background: #EDEDED; border-top: 1px solid #DDDDDD; }</style><div class="galeri_icerik_'.$random.'">';
+        $js = '<script type="text/javascript">$(\'.galeri_icerik_'.$random.' img\').css("border", "1px dashed #ADA9A9");$(".galeri_icerik_'.$random.' img").hover(function(){$(this).css("border", "1px solid #ADA9A9").addClass("aktif");$(".galeri_icerik_'.$random.' img").not("aktif").addClass("pasif");}, function(){$(this).css("border", "1px dashed #ADA9A9").removeClass("aktif");$(".galeri_icerik_'.$random.' img").removeClass("pasif");});';
+        $js .= '$(\'.galeri_icerik_'.$random.'\').BalancedGallery({autoResize: false, background: null, idealHeight: 200, idealWidth: null, maintainOrder: true, orientation: \'horizontal\',padding: 20, shuffleUnorderedPartitions: true, viewportHeight: null, viewportWidth: null});</script>';
+
+
+        echo $div. $veri . '</div>' . $js;
+
+    }
+
+
+    function buluntu_galeri($id = 0){
+        if(!is_numeric($id)){ die(); }
+
+        $where = 'bk_id = ' . $id . ' AND kim = ' . $_SESSION['ID'];
+        if($id > 0)
+            $where = 'bk_id = ' . $id;
+
+
+        $data['galeri'] =  $this->sql->from('buluntu_galeri')->where($where)->orderBy('id DESC')->getAll();
+        load::view('modal/buluntu_galeri',$data);
+    }
+
+    function buluntu_detay($id = null, $print = 0)
+    {
+        $this->sec('buluntu_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        #Buluntu detay
+        $x = $this->sql->select('*, LPAD(buluntu_no,4,0) as buluntu_num')->from('buluntu_karti')->where("bk_id = $id")->get();
+        $data['q'] = $x;
+
+        #Anakod
+        $y = $this->sql->from('anakod')->where("anakod_id = $x->bk_anakod_id")->get();
+        $data['anakod'] = $y->anakod;
+
+        #Buluntu Yeri bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_buluntuyeri_id)->get();
+        $data['by'] = $d->list_adi;
+
+        #Formobje bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_formobje_id)->get();
+        $data['formobje'] = $d->list_adi;
+
+        #Yapim Malzemesi bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_yapim_mlz_id)->get();
+        $data['yapim_malzemesi'] = $d->list_adi;
+
+        #Uretim Yeri bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_uretimyeri_id)->get();
+        $data['uretimyeri'] = $d->list_adi;
+
+        #Donem bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_donem_id)->get();
+        $data['donem'] = $d->list_adi;
+
+        #Tip bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_tip_id)->get();
+        $data['tip'] = $d->list_adi;
+
+        #Hamur Rengi bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_hamur_renk_id)->get();
+        $data['hamur_rengi'] = $d->list_adi;
+
+        #Astar Rengi bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->bk_astar_renk_id)->get();
+        $data['astar_rengi'] = $d->list_adi;
+
+        #Buluntu Gorselleri
+        $data['galeri'] = @$this->sql->from('buluntu_galeri')->where("bk_id = $id")->getAll();
+
+
+        if($print == 0){
+            #Log detay
+            $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'buluntu_karti' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+            $data['log'] = $log;
+            $data['logGoster'] = false;
+
+            if($this->sql->count() > 0){
+
+                #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+                if(is_numeric($log->kullanici_id)){
+                    $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                    $data['user'] = $user->adsoyad;
+                    $data['logGoster'] = true;
+                }
+            }
+
+
+            /* Tab menu sayfalama */
+
+            $ilk = $x->buluntu_no - 7;
+            if($ilk < 0) {
+                $ilk = 1;
+            }
+
+            if($x->buluntu_no < 8){
+                $son = $x->buluntu_no + (14-$x->buluntu_no);
+            }else{
+                $son = $x->buluntu_no + 7;
+            }
+
+            #Kendisinden onceki ve sonraki 7 kayit (kendisi dahil) toplam 15
+            $ilkGetir = $this->sql->select('bk_id, LPAD(buluntu_no,4,0) as buluntu_num')->from('buluntu_karti')->where("bk_anakod_id = $x->bk_anakod_id AND buluntu_no BETWEEN $ilk AND $son")->getAll();
+
+            $ilkData = '';
+            foreach($ilkGetir as $ilk){
+                if($id == $ilk->bk_id){
+                    $sec = ' class="active"';
+                }else{$sec = '';}
+                $ilkData .= '<li '.$sec.'><a href="#" data-id="'.$ilk->bk_id.'">'.$ilk->buluntu_num.'</a></li>';
+            }
+
+            $data['anakodPage'] = $ilkData;
+
+            load::view('modal/buluntu_detay', $data);
+        }else{
+            load::view('modal/buluntu_print', $data);
+        }
+    }
+
+    function buluntu_anakod_getir($id = null, $islem = 0){
+
+        $this->sec('buluntu_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        $where = "bk_anakod_id > $id";
+        $order = "bk_anakod_id ASC";
+
+        #onceki kayit butonuna basildiysa
+        if($islem == 0){
+            $where = "bk_anakod_id < $id";
+            $order = "bk_anakod_id DESC";
+        }
+
+        $x = $this->sql->select('bk_id, bk_anakod_id')->from('buluntu_karti')->where($where)->orderBy($order)->limit(1)->get();
+
+        if($this->sql->count() > 0){
+
+            #Sistemde kayitli son buluntuyu getirmek icin gerekli sorgu
+            $y = $this->sql->select('bk_id')->from('buluntu_karti')->where("bk_anakod_id = $x->bk_anakod_id")->orderBy('bk_id DESC')->limit(1)->get();
+
+            echo $this->buluntu_detay($y->bk_id, 0);
+        }else{
+            #herhangi bir veri donmezse sayfaya bir sey basma..
+            echo "0";
+        }
+
+    }
+
+    function buluntu_envanterlik()
+    {
+        $this->sec('buluntu_duzenle');
+        //$data['sezonlar'] = $this->sql->select('DISTINCT sezon')->from('envanterlik_liste')->orderBy('sezon DESC')->getAll();
+
+        load::view('ajax/buluntu_envanterlik');
+    }
+
+    function buluntu_envanterlik_data()
+    {
+        $this->sec('buluntu_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('b.bk_id, b.anakod, b.buluntu_no, b.buluntu_yeri, b.yapim_malzemesi, b.buluntu_tarihi, b.donem, b.formobje, e.sezon')
+            ->from('envanterlik_liste as e')
+            ->leftJoin('buluntu_listesi as b', 'e.envanter_bk_id = b.bk_id')
+            ->orderBy('b.bk_id DESC');
+
+        $this->datatables->edit_column('b.bk_id', '$1', 'b.bk_id')
+            ->edit_column('b.anakod', '$1', 'b.anakod')
+            ->edit_column('b.buluntu_no', '$1', 'b.buluntu_no')
+            ->edit_column('b.buluntu_yeri', '$1', 'b.buluntu_yeri')
+            ->edit_column('b.yapim_malzemesi', '$1', 'b.yapim_malzemesi')
+            ->edit_column('b.buluntu_tarihi', '$1', 'b.buluntu_tarihi')
+            ->edit_column('b.donem', '$1', 'b.donem')
+            ->edit_column('b.formobje', '$1', 'b.formobje')
+            ->edit_column('e.sezon', '$1', 'e.sezon');
+
+        echo $this->datatables->generate();
+    }
+
+    function buluntu_konservasyon()
+    {
+        $this->sec('buluntu_duzenle');
+
+        load::view('ajax/buluntu_konservasyon');
+    }
+
+    function buluntu_konservasyon_data()
+    {
+        $this->sec('buluntu_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('b.bk_id, b.anakod, b.buluntu_no, b.buluntu_yeri, k.lab_giris, k.lab_cikis, k.tip, k.konservator')
+            ->from('konservasyon_listesi as k')
+            ->leftJoin('buluntu_listesi as b', 'k.kons_bk_id = b.bk_id')
+            ->orderBy('k.kons_bk_id DESC');
+
+        $this->datatables->edit_column('b.bk_id', '$1', 'b.bk_id')
+            ->edit_column('b.anakod', '$1', 'b.anakod')
+            ->edit_column('b.buluntu_no', '$1', 'b.buluntu_no')
+            ->edit_column('b.buluntu_yeri', '$1', 'b.buluntu_yeri')
+            ->edit_column('k.lab_giris', '$1', 'k.lab_giris')
+            ->edit_column('k.lab_cikis', '$1', 'k.lab_cikis')
+            ->edit_column('k.tip', '$1', 'k.tip')
+            ->edit_column('k.konservator', '$1', 'k.konservator');
+
+        echo $this->datatables->generate();
+    }
+
+    function buluntu_restorasyon()
+    {
+        $this->sec('buluntu_duzenle');
+
+        load::view('ajax/buluntu_restorasyon');
+    }
+
+    function buluntu_restorasyon_data()
+    {
+        $this->sec('buluntu_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('b.bk_id, b.anakod, b.buluntu_no, b.buluntu_yeri, r.tip, r.konservator, r.temsilci, r.uygulayan')
+            ->from('restorasyon_listesi as r')
+            ->leftJoin('buluntu_listesi as b', 'r.rest_bk_id = b.bk_id')
+            ->orderBy('r.rest_bk_id DESC');
+
+        $this->datatables->edit_column('b.bk_id', '$1', 'b.bk_id')
+            ->edit_column('b.anakod', '$1', 'b.anakod')
+            ->edit_column('b.buluntu_no', '$1', 'b.buluntu_no')
+            ->edit_column('b.buluntu_yeri', '$1', 'b.buluntu_yeri')
+            ->edit_column('r.tip', '$1', 'r.tip')
+            ->edit_column('r.konservator', '$1', 'r.konservator')
+            ->edit_column('r.temsilci', '$1', 'r.temsilci')
+            ->edit_column('r.uygulayan', '$1', 'r.uygulayan');
+
+        echo $this->datatables->generate();
+    }
+
+    function konservasyon_get(){
+        $this->sec('buluntu_ekle');
+
+        $id  = strip_tags(addslashes($_POST['id']));
+
+        if(!is_numeric($id))
+            die("0");
+
+        @$this->sql->from('konservasyon_listesi')->where('kons_bk_id = ' . $id)->get();
+        if($this->sql->count() > 0){
+            # daha once olusturulmus rapor var - popup ac
+            echo "1";
+        }else{
+            //$d = $this->sql->select('b.bk_id, LPAD(b.buluntu_no,4,0) as buluntu_no, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke, x.list_adi as buluntu_yeri')->from('buluntu_karti as b')->leftJoin('list_data as x','x.list_id = b.bk_buluntuyeri_id')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+            $d = $this->sql->select('b.bk_id, LPAD(b.buluntu_no,4,0) as buluntu_no, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke')->from('buluntu_karti as b')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+            if($this->sql->count() < 1)
+                die("0");
+
+            $tip = array('Metal','Taş','Kemik','Cam','Seramik');
+
+            if(in_array($d->form_yapim, $tip, true) || $d->form_sikke == 'Sikke') {
+                # konservasyon olusturma formuna yonlendir
+                $tip = $d->form_yapim;
+
+                if($d->form_sikke == 'Sikke')
+                    $tip = $d->form_sikke;
+
+                echo strtolower(str_replace('ş', 's',$tip));
+            }else{
+                # konservasyon olusturmaya uygun degil
+                echo "0";
+            }
+        }
+    }
+
+    function konservasyon_duzenle($id = null){
+        $this->sec('buluntu_duzenle');
+
+        if(!is_numeric($id))
+            die("0");
+
+        $this->konservasyon_islem($id, 1, null);
+    }
+
+    function konservasyon_islem($id = null, $islem = 0, $tip = null){
+        $this->sec('buluntu_ekle');
+        load::helper('csrf_generate');
+
+        if(!is_numeric($id))
+            die("0");
+
+        $d = $this->sql->select('b.bk_id, LPAD(b.buluntu_no,4,0) as buluntu_no, a.anakod, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke, x.list_adi as buluntu_yeri')->from('buluntu_karti as b')->leftJoin('anakod as a','a.anakod_id = b.bk_anakod_id')->leftJoin('list_data as x','x.list_id = b.bk_buluntuyeri_id')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+
+        $data['form_tip'] = $tip;
+
+        if($islem == 1){
+            $q = $this->sql->from('konservasyon_listesi')->where('kons_bk_id = ' . $id)->get();
+            $data['q'] = $q;
+            if(is_null($tip))
+                $data['form_tip'] = $q->tip;
+        }
+
+        $data['id'] = $id;
+        $data['qq'] = $d;
+        $data['token'] = csrf_generate();
+        $data['islem'] = $islem;
+
+
+        load::view('modal/konservasyon_islem', $data);
+    }
+
+    function konservasyon_detay($id = null, $print = 0){
+
+        $this->sec('buluntu_listesi');
+
+        if(!is_numeric($id))
+            die("0");
+
+        $d = $this->sql->select('b.bk_id, LPAD(b.buluntu_no,4,0) as buluntu_no, a.anakod, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke, x.list_adi as buluntu_yeri')->from('buluntu_karti as b')->leftJoin('anakod as a','a.anakod_id = b.bk_anakod_id')->leftJoin('list_data as x','x.list_id = b.bk_buluntuyeri_id')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+        $q = $this->sql->from('konservasyon_listesi')->where('kons_bk_id = ' . $id)->get();
+
+        $data['q'] = $q;
+        $data['qq'] = $d;
+        $data['form_tip'] = $q->tip;
+
+        if(!$print){
+
+            $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'konservasyon_listesi' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+            $data['log'] = $log;
+            $data['logGoster'] = false;
+
+            if($this->sql->count() > 0){
+
+                #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+                if(is_numeric($log->kullanici_id)){
+                    $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                    $data['user'] = $user->adsoyad;
+                    $data['logGoster'] = true;
+                }
+            }
+            load::view('modal/konservasyon_detay', $data);
+        }else{
+
+            load::helper('string');
+
+            load::view('modal/konservasyon_print', $data);
+        }
+
+    }
+
+    function restorasyon_get(){
+        $this->sec('buluntu_ekle');
+
+        $id  = strip_tags(addslashes($_POST['id']));
+
+        if(!is_numeric($id))
+            die("0");
+
+        @$this->sql->from('restorasyon_listesi')->where('rest_bk_id = ' . $id)->get();
+        if($this->sql->count() > 0){
+            # daha once olusturulmus rapor var - popup ac
+            echo "1";
+        }else{
+            $d = $this->sql->select('b.bk_id, LPAD(b.buluntu_no,4,0) as buluntu_no, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke')->from('buluntu_karti as b')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+            if($this->sql->count() < 1)
+                die("0");
+
+            $tip = array('Metal','Taş','Kemik','Cam','Seramik');
+
+            if(in_array($d->form_yapim, $tip, true) || $d->form_sikke == 'Sikke') {
+                # restorasyon olusturma formuna yonlendir
+                $tip = $d->form_yapim;
+
+                if($d->form_sikke == 'Sikke')
+                    $tip = $d->form_sikke;
+
+                echo strtolower(str_replace('ş', 's',$tip));
+            }else{
+                # restorasyon olusturmaya uygun degil
+                echo "0";
+            }
+        }
+    }
+
+    function restorasyon_duzenle($id = null){
+        $this->sec('buluntu_duzenle');
+
+        if(!is_numeric($id))
+            die("0");
+
+        $this->restorasyon_islem($id, 1, null);
+    }
+
+    function restorasyon_islem($id = null, $islem = 0, $tip = null){
+        $this->sec('buluntu_ekle');
+        load::helper('csrf_generate');
+
+        if(!is_numeric($id))
+            die("0");
+
+        $d = $this->sql->select('b.bk_id, b.buluntu_no, b.kazienv_no, a.anakod, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke')->from('buluntu_karti as b')->leftJoin('anakod as a','a.anakod_id = b.bk_anakod_id')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+
+        $data['form_tip'] = $tip;
+
+        if($islem == 1){
+            $q = $this->sql->from('restorasyon_listesi')->where('rest_bk_id = ' . $id)->get();
+            $data['q'] = $q;
+            if(is_null($tip))
+                $data['form_tip'] = $q->tip;
+        }
+
+        $data['id'] = $id;
+        $data['qq'] = $d;
+        $data['token'] = csrf_generate();
+        $data['islem'] = $islem;
+
+
+        load::view('modal/restorasyon_islem', $data);
+    }
+
+    function restorasyon_detay($id = null, $print = 0){
+
+        $this->sec('buluntu_listesi');
+
+        if(!is_numeric($id))
+            die("0");
+
+        $d = $this->sql->select('b.bk_id, b.buluntu_no, b.kazienv_no, a.anakod, l.list_adi as yapim_malzemesi, l.form as form_yapim, ll.list_adi as form_obje, ll.form as form_sikke')->from('buluntu_karti as b')->leftJoin('anakod as a','a.anakod_id = b.bk_anakod_id')->leftJoin('list_data as l','l.list_id = b.bk_yapim_mlz_id')->leftJoin('list_data as ll','ll.list_id = b.bk_formobje_id')->where('b.bk_id = ' . $id)->get();
+        $q = $this->sql->from('restorasyon_listesi')->where('rest_bk_id = ' . $id)->get();
+
+        $data['q'] = $q;
+        $data['qq'] = $d;
+        $data['form_tip'] = $q->tip;
+
+        if(!$print){
+
+            $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'restorasyon_listesi' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+            $data['log'] = $log;
+            $data['logGoster'] = false;
+
+            if($this->sql->count() > 0){
+
+                #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+                if(is_numeric($log->kullanici_id)){
+                    $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                    $data['user'] = $user->adsoyad;
+                    $data['logGoster'] = true;
+                }
+            }
+            load::view('modal/restorasyon_detay', $data);
+        }else{
+
+            $a = $this->sql->from('genel_ayarlar')->where('id = 1')->get();
+            $data['baskan'] = $a->kazi_baskani;
+
+            load::view('modal/restorasyon_print', $data);
+        }
+
+    }
+
+
+    /* ACMA RAPOR */
+
+    function acma_rapor_ekle()
+    {
+
+        $this->sec('acma_rapor_ekle');
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        load::view('modal/acma_rapor_ekle',$data);
+    }
+
+    function acma_rapor_duzenle($id = null)
+    {
+        $this->sec('acma_rapor_duzenle');
+        if(!is_numeric($id)){ die(); }
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $x = $this->sql->from('acma_rapor')->where("ID = $id")->get();
+        $data['q'] = $x;
+
+        $data['galeri'] = $this->sql->from('acma_rapor_galeri')->where('acma_rapor_id = '. $id)->getAll();
+        $data['lb_buluntu_yeri'] = $this->sql->from('list_data')->where("list_id = $x->buluntuyeri_id")->get();
+
+        load::view('modal/acma_rapor_duzenle', $data);
+    }
+
+    function acma_rapor_listesi()
+    {
+        $this->sec('acma_rapor_listesi');
+        load::view('ajax/acma_rapor_listesi');
+    }
+
+    function acma_rapor_listesi_data()
+    {
+
+        $this->sec('acma_rapor_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('ar.ID, ar.baslik,  bye.list_adi, ar.calisma_yili, ar.yazim_tarihi, ar.adsoyad, ar.rapor_tipi, ar.durum')
+            ->from('acma_rapor as ar')
+            ->leftJoin('list_data as bye', 'ar.buluntuyeri_id = bye.list_id')->orderBy('ar.ID DESC');
+
+        $this->datatables->edit_column('ar.ID', '$1', 'ar.ID')
+            ->edit_column('ar.baslik', '$1', 'ar.baslik')
+            ->edit_column('bye.list_adi', '$1', 'bye.list_adi')
+            ->edit_column('ar.calisma_yili', '$1', 'ar.calisma_yili')
+            ->edit_column('ar.yazim_tarihi', '$1', 'ar.yazim_tarihi')
+            ->edit_column('ar.adsoyad', '$1', 'ar.adsoyad')
+            ->edit_column('ar.rapor_tipi', '$1', 'ar.rapor_tipi')
+            ->edit_column('ar.durum', '$1', 'ar.durum');
+
+
+        echo $this->datatables->generate();
+    }
+
+    function acma_rapor_detay($id = null, $print = 0)
+    {
+        $this->sec('acma_rapor_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        #Buluntu detay
+        $x = $this->sql->from('acma_rapor')->where("ID = $id")->get();
+        $data['q'] = $x;
+
+        #Buluntu Yeri bilgisi
+        $d = @$this->sql->from('list_data')->where('list_id = ' . $x->buluntuyeri_id)->get();
+        $data['by'] = $d->list_adi;
+
+
+        if($print == 0){
+            #Log detay
+            $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'acma_rapor' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+            $data['log'] = $log;
+            $data['logGoster'] = false;
+
+            if($this->sql->count() > 0){
+
+                #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+                if(is_numeric($log->kullanici_id)){
+                    $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                    $data['user'] = $user->adsoyad;
+                    $data['logGoster'] = true;
+                }
+            }
+
+            load::view('modal/acma_rapor_detay', $data);
+        }else{
+            load::view('modal/acma_rapor_print', $data);
+        }
+    }
+
+    function acma_rapor_getir($id = null, $islem = 0){
+
+        $this->sec('acma_rapor_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        $where = "ID > $id";
+        $order = "ID ASC";
+
+        #onceki kayit butonuna basildiysa
+        if($islem == 0){
+            $where = "ID < $id";
+            $order = "ID DESC";
+        }
+
+        $x = $this->sql->select('ID, baslik')->from('acma_rapor')->where($where)->orderBy($order)->limit(1)->get();
+
+        if($this->sql->count() > 0){
+
+            echo $this->acma_rapor_detay($x->ID, 0);
+        }else{
+            #herhangi bir veri donmezse sayfaya bir sey basma..
+            echo "0";
+        }
+
+    }
+
+    function acma_rapor_galeri($id = 0){
+        if(!is_numeric($id)){ die(); }
+
+        $where = 'acma_rapor_id = ' . $id . ' AND kim = ' . $_SESSION['ID'];
+        if($id > 0)
+            $where = 'acma_rapor_id = ' . $id;
+
+        $data['galeri'] =  $this->sql->from('acma_rapor_galeri')->where($where)->orderBy('resim_id DESC')->getAll();
+        load::view('modal/acma_rapor_galeri',$data);
+    }
+
+
+    /* EVRAK YONETIMI */
+
+    function evrak_ekle()
+    {
+        $this->sec('evrak_ekle');
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        load::view('modal/evrak_ekle',$data);
+    }
+
+    function evrak_duzenle($id = null)
+    {
+        $this->sec('evrak_duzenle');
+        if(!is_numeric($id)){ die(); }
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $x = $this->sql->from('evrak_yonetimi')->where("id = $id")->get();
+        $data['q'] = $x;
+
+        $data['dosyalar'] = $this->sql->from('evrak_yonetimi_dosya')->where('evrak_id = '. $id)->getAll();
+
+        load::view('modal/evrak_duzenle', $data);
+    }
+
+    function evrak_listesi($tip = 'gelen')
+    {
+        $this->sec('evrak_listesi');
+
+        $data['evrak_tipi'] = $tip;
+
+        load::view('ajax/evrak_listesi', $data);
+    }
+
+    function evrak_listesi_data($tip = 'gelen')
+    {
+        $this->sec('evrak_listesi_data');
+
+        if($tip !== 'gelen' && $tip !== 'giden' && $tip !== 'favori')
+            die();
+
+        $tip = strtolower($tip);
+        $where = "evrak_tipi = '".$tip."'";
+        if($tip == 'favori')
+            $where = "favori = 1";
+
+
+        $this->datatables = load::library('datatable');
+        $this->datatables->select('id, evrak_konusu, evrak_kurum, evrak_sayi, evrak_no, evrak_tarihi, kayit_tarihi, evrak_oncelik, evrak_tipi')
+            ->from('evrak_yonetimi')->where($where)->orderBy('id DESC');
+
+        $this->datatables->edit_column('id', '$1', 'id')
+            ->edit_column('evrak_konusu', '$1', 'evrak_konusu')
+            ->edit_column('evrak_kurum', '$1', 'evrak_kurum')
+            ->edit_column('evrak_sayi', '$1', 'evrak_sayi')
+            ->edit_column('evrak_no', '$1', 'evrak_no')
+            ->edit_column('evrak_tarihi', '$1', 'evrak_tarihi')
+            ->edit_column('kayit_tarihi', '$1', 'kayit_tarihi')
+            ->edit_column('evrak_oncelik', '$1', 'evrak_oncelik')
+            ->edit_column('evrak_tipi', '$1', 'evrak_tipi');
+
+        echo $this->datatables->generate();
+    }
+
+    function evrak_detay($id = null)
+    {
+        $this->sec('evrak_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        #Evrak detay
+        $x = $this->sql->from('evrak_yonetimi')->where("id = $id")->get();
+        $data['q'] = $x;
+
+        $data['dosyalar'] = @$this->sql->from('evrak_yonetimi_dosya')->where('evrak_id = ' . $id)->orderBy('id DESC')->getAll();
+
+        #Log detay
+        $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'evrak_yonetimi' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+        $data['log'] = $log;
+        $data['logGoster'] = false;
+
+        if($this->sql->count() > 0){
+
+            #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+            if(is_numeric($log->kullanici_id)){
+                $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                $data['user'] = $user->adsoyad;
+                $data['logGoster'] = true;
+            }
+        }
+
+        load::view('modal/evrak_detay', $data);
+    }
+
+    function evrak_getir($id = null, $islem = 0, $tip = 'gelen'){
+
+        $this->sec('evrak_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        $tip = strtolower($tip);
+
+        $where = "id > $id AND evrak_tipi = '".$tip."'";
+        $order = "id ASC";
+
+        # onceki kayit butonuna basildiysa
+        if($islem == 0){
+            $where = "id < $id AND evrak_tipi = '".$tip."'";
+            $order = "id DESC";
+        }
+
+        $x = $this->sql->select('id, kayit_tarihi')->from('evrak_yonetimi')->where($where)->orderBy($order)->limit(1)->get();
+
+        if($this->sql->count() > 0){
+
+            echo $this->evrak_detay($x->id);
+        }else{
+            # herhangi bir veri donmezse sayfaya bir sey yazma..
+            echo "0";
+        }
+
+    }
+
+    function evrak_yukle($id = 0){
+        if(!is_numeric($id)){ die(); }
+
+        $where = 'evrak_id = ' . $id . ' AND kim = ' . $_SESSION['ID'];
+        if($id > 0)
+            $where = 'evrak_id = ' . $id;
+
+        $data['dosyalar'] =  $this->sql->from('evrak_yonetimi_dosya')->where($where)->orderBy('evrak_id DESC')->getAll();
+        load::view('modal/evrak_yukle',$data);
+    }
+
+
+    /* DEMIRBAS */
+
+    function demirbas_ekle(){
+        $this->sec('demirbas');
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        load::view('modal/demirbas_ekle',$data);
+    }
+
+    function demirbas_duzenle($id = null)
+    {
+        $this->sec('demirbas_duzenle');
+        if(!is_numeric($id)){ die(); }
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $x = $this->sql->from('demirbas_listesi')->where("id = $id")->get();
+        $data['q'] = $x;
+
+        load::view('modal/demirbas_duzenle', $data);
+    }
+
+    function demirbas_listesi()
+    {
+        $this->sec('demirbas_listesi');
+        load::view('ajax/demirbas_listesi');
+    }
+
+    function demirbas_listesi_data()
+    {
+
+        $this->sec('demirbas_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('id, malzeme_adi, malzeme_marka, malzeme_model, bulundugu_yer, zimmetlenen_personel, alinis_tarihi, alinis_sekli, miktar, durum')
+            ->from('demirbas_listesi')->orderBy('id DESC');
+
+        $this->datatables->edit_column('id', '$1', 'id')
+            ->edit_column('malzeme_adi', '$1', 'malzeme_adi')
+            ->edit_column('malzeme_marka', '$1', 'malzeme_marka')
+            ->edit_column('malzeme_model', '$1', 'malzeme_model')
+            ->edit_column('bulundugu_yer', '$1', 'bulundugu_yer')
+            ->edit_column('zimmetlenen_personel', '$1', 'zimmetlenen_personel')
+            ->edit_column('alinis_tarihi', '$1', 'alinis_tarihi')
+            ->edit_column('alinis_sekli', '$1', 'alinis_sekli')
+            ->edit_column('miktar', '$1', 'miktar')
+            ->edit_column('durum', '$1', 'durum');
+
+
+        echo $this->datatables->generate();
+    }
+
+    function demirbas_detay($id = null)
+    {
+        $this->sec('demirbas_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        #Demirbas detay
+        $x = $this->sql->from('demirbas_listesi')->where("id = $id")->get();
+        $data['q'] = $x;
+
+        #Log detay
+        $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'demirbas_listesi' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+        $data['log'] = $log;
+        $data['logGoster'] = false;
+
+        if($this->sql->count() > 0){
+
+            #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+            if(is_numeric($log->kullanici_id)){
+                $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                $data['user'] = $user->adsoyad;
+                $data['logGoster'] = true;
+            }
+        }
+
+
+        load::view('modal/demirbas_detay', $data);
+    }
+
+    function demirbas_getir($id = null, $islem = 0){
+
+        $this->sec('demirbas_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+
+        $where = "id > $id";
+        $order = "id ASC";
+
+        #onceki kayit butonuna basildiysa
+        if($islem == 0){
+            $where = "id < $id";
+            $order = "id DESC";
+        }
+
+        $x = $this->sql->select('id')->from('demirbas_listesi')->where($where)->orderBy($order)->limit(1)->get();
+
+        if($this->sql->count() > 0){
+
+            echo $this->demirbas_detay($x->id);
+        }else{
+            #herhangi bir veri donmezse sayfaya bir sey yazma..
+            echo "0";
+        }
+
+    }
+
+
+    /* YAYINLAR */
+
+
+    function yayin_ekle()
+    {
+
+        $this->sec('yayin_ekle');
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        load::view('modal/yayin_ekle',$data);
+    }
+
+
+    function yayin_duzenle($id = null)
+    {
+        $this->sec('yayin_duzenle');
+        if(!is_numeric($id)){ die(); }
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+
+        $x = $this->sql->from('yayinlar')->where("id = $id")->get();
+        $data['q'] = $x;
+
+        $data['dosyalar'] = $this->sql->from('yayinlar_dosya')->where('yayin_id = '. $id)->getAll();
+        $data['kategori'] = $this->sql->from('list_data')->where("list_id = $x->kategori_id")->get();
+
+        load::view('modal/yayin_duzenle', $data);
+    }
+
+
+    function yayin_getir($id = null, $islem = 0){
+
+        $this->sec('yayin_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+
+        $where = "id > $id";
+        $order = "id ASC";
+
+        # onceki kayit butonuna basildiysa
+        if($islem == 0){
+            $where = "id < $id";
+            $order = "id DESC";
+        }
+
+        $x = $this->sql->select('id')->from('yayinlar')->where($where)->orderBy($order)->limit(1)->get();
+
+        if($this->sql->count() > 0){
+
+            echo $this->yayin_detay($x->id);
+        }else{
+            # herhangi bir veri donmezse sayfaya bir sey yazma..
+            echo "0";
+        }
+
+    }
+
+    function yayin_detay($id = null)
+    {
+        $this->sec('yayin_detay');
+
+        if(!is_numeric($id)){ die(); }
+
+        #Yayin detay
+        $x = $this->sql->from('yayinlar')->where("id = $id")->get();
+        $data['q'] = $x;
+
+        $data['kategori'] = $this->sql->from('list_data')->where("list_id = $x->kategori_id")->get();
+        $data['dosyalar'] = @$this->sql->from('yayinlar_dosya')->where('yayin_id = ' . $id)->orderBy('id DESC')->getAll();
+
+        #Log detay
+        $log = @$this->sql->select('kullanici_id,islem,tarih')->from('_log')->where("tablo = 'yayinlar' AND data_id = " . $id)->orderBy('log_id DESC')->limit(1)->get();
+        $data['log'] = $log;
+        $data['logGoster'] = false;
+
+        if($this->sql->count() > 0){
+
+            #Import edilen verilerde sorun cikmamasi icin kullanici bilgisi kontrol ediliyor.
+            if(is_numeric($log->kullanici_id)){
+                $user = @$this->sql->from('_kullanici')->where('ID = ' . $log->kullanici_id)->get();
+                $data['user'] = $user->adsoyad;
+                $data['logGoster'] = true;
+            }
+        }
+
+        load::view('modal/yayin_detay', $data);
+    }
+
+
+    function yayin_listesi()
+    {
+        $this->sec('yayin_listesi');
+
+        $data['kategoriler'] = $this->sql->from('list_data')->where('tip = 8 AND durum = 1')->getAll();
+
+        load::view('ajax/yayin_listesi', $data);
+    }
+
+    function yayin_listesi_data()
+    {
+        $this->sec('yayin_listesi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('y.id, y.eser_ad, y.eser_yazar, y.eser_yil, y.eser_yayinyeri, k.list_adi')
+            ->from('yayinlar as y')->leftJoin('list_data as k', 'y.kategori_id = k.list_id')->orderBy('y.id DESC');
+
+        $this->datatables->edit_column('y.id', '$1', 'y.id')
+            ->edit_column('y.eser_ad', '$1', 'y.eser_ad')
+            ->edit_column('y.eser_yazar', '$1', 'y.eser_yazar')
+            ->edit_column('y.eser_yil', '$1', 'y.eser_yil')
+            ->edit_column('y.eser_yayinyeri', '$1', 'y.eser_yayinyeri')
+            ->edit_column('k.list_adi', '$1', 'k.list_adi');
+
+        echo $this->datatables->generate();
+    }
+
+
+    function yayin_yukle($id = 0){
+        if(!is_numeric($id)){ die(); }
+
+        $where = 'yayin_id = ' . $id . ' AND kim = ' . $_SESSION['ID'];
+        if($id > 0)
+            $where = 'yayin_id = ' . $id;
+
+        $data['dosyalar'] =  $this->sql->from('yayinlar_dosya')->where($where)->orderBy('yayin_id DESC')->getAll();
+        load::view('modal/yayin_yukle',$data);
+    }
+
+
+    /* ISLEM GECMISI & LOG*/
+
+    function islem_gecmisi(){
+        $this->sec('islem_gecmisi');
+        load::view('ajax/islem_gecmisi');
+    }
+
+    function islem_gecmisi_data()
+    {
+        $this->sec('islem_gecmisi_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select("log_id, data_title, data_cat, islem_tip, adsoyad,  tarih")
+            ->from('islem_gecmisi')->where("data_title != ''")->orderBy('log_id DESC');
+
+        $this->datatables->edit_column('log_id', '$1', 'log_id')
+            ->edit_column('data_title', '$1', 'data_title')
+            ->edit_column('data_cat', '$1', 'data_cat')
+            ->edit_column('adsoyad', '$1', 'adsoyad')
+            ->edit_column('islem_tip', '$1', 'islem_tip')
+            ->edit_column('tarih', '$1', 'tarih');
+
+        echo $this->datatables->generate();
+    }
+
+    function giris_loglari(){
+        $this->sec('giris_loglari');
+        load::view('ajax/giris_loglari');
+    }
+
+    function giris_loglari_data(){
+        $this->sec('giris_loglari_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select("l.ID,k.adsoyad,l.ip,l.tarih")
+            ->from('_kullanici_log as l')->leftJoin('_kullanici as k','k._kullanici = l.user')->where('l.hata = 0')->orderBy('l.ID DESC');
+
+        $this->datatables->edit_column('l.ID', '$1', 'l.ID')
+            ->edit_column('k.adsoyad', '$1', 'k.adsoyad')
+            ->edit_column('l.ip', '$1', 'l.ip')
+            ->edit_column('l.tarih', '$1', 'l.tarih');
+
+        echo $this->datatables->generate();
+
+    }
+
+
+    function hatali_girisler(){
+        $this->sec('hatali_girisler');
+        load::view('ajax/hatali_girisler');
+    }
+
+    function hatali_girisler_data(){
+        $this->sec('giris_loglari_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select("l.ID,l.user,l.ip,l.tarih")
+            ->from('_kullanici_log as l')->where('l.hata = 1')->orderBy('l.ID DESC');
+
+        $this->datatables->edit_column('l.ID', '$1', 'l.ID')
+            ->edit_column('l.user', '$1', 'l.user')
+            ->edit_column('l.ip', '$1', 'l.ip')
+            ->edit_column('l.tarih', '$1', 'l.tarih');
+
+        echo $this->datatables->generate();
+
+    }
+
+    /* ISTATISTIK SIHIRBAZI */
+
+    function istatistik_sihirbazi(){
+        $this->sec('raporlar');
+
+        load::helper('csrf_generate');
+        $data['token'] = csrf_generate();
+
+        $data['anakod'] = $this->sql->select('anakod_id, anakod')->from('anakod')->orderBy('anakod_id DESC')->limit(10)->getAll();
+
+        load::view('modal/istatistik_sihirbazi',$data);
+    }
+
+
+    function rapor_olustur(){
+
+        if( $_SESSION['csrf'] != $_POST['token']){
+            echo "0";
+            die();
+        }
+
+        $parameters = array();
+
+        $buluntu_yili_ilk = @$_POST['buluntu_yili_ilk'];
+        $buluntu_yili_son = @$_POST['buluntu_yili_son'];
+        $buluntu_yeri = implode(',',$_POST['bk_buluntuyeri_id']);
+        $uretim_yeri = implode(',', $_POST['bk_uretimyeri_id']);
+        $buluntu_tip = implode(',',$_POST['bk_tip_id']);
+        $donem = implode(',',$_POST['bk_donem_id']);
+        $formobje = implode(',', $_POST['bk_formobje_id']);
+        $yapim_malzemesi = implode(',',$_POST['bk_yapim_mlz_id']);
+
+        $grafik_tipi = @$_POST['grafik_tipi'];
+
+        $grafik_tipi = $grafik_tipi . @$_POST['grafik_mod'];
+
+
+        if(isset($buluntu_yeri)) $parameters[1] = 'bk.bk_buluntuyeri_id IN(' . $buluntu_yeri . ')';
+        if(isset($uretim_yeri)) $parameters[2] = 'bk.bk_uretimyeri_id IN(' . $uretim_yeri . ')';
+        if(isset($buluntu_tip)) $parameters[3] = 'bk.bk_tip_id IN(' . $buluntu_tip . ')';
+        if(isset($donem)) $parameters[4] = 'bk.bk_donem_id IN(' . $donem . ')';
+        if(isset($yapim_malzemesi)) $parameters[5] = 'bk.bk_yapim_mlz_id IN(' . $yapim_malzemesi . ')';
+        if(isset($buluntu_yili_ilk) && $buluntu_yili_ilk != '') $parameters[6] = 'SUBSTRING(bk.buluntu_tarihi,-4,4) >= ' . $buluntu_yili_ilk;
+        if(isset($buluntu_yili_son) && $buluntu_yili_son != '') $parameters[7] = 'SUBSTRING(bk.buluntu_tarihi,-4,4) <= ' . $buluntu_yili_son;
+        if(isset($formobje)) $parameters[8] = 'bk.bk_formobje_id IN(' . $formobje . ')';
+
+        $where = implode(' AND ', $parameters);
+        $where = '  WHERE ' . $where . " AND SUBSTRING(bk.buluntu_tarihi,-4,4) != ''";
+        if(count($parameters) < 1) {$where = '';}
+
+
+        $query = 'SELECT lb.list_adi as buluntu_yeri, SUBSTRING(bk.buluntu_tarihi,-4,4) as buluntu_yili, count(*) as adet from buluntu_karti as bk LEFT JOIN list_data as lb ON lb.list_id = bk.bk_buluntuyeri_id' . $where . ' group by bk.bk_buluntuyeri_id, SUBSTRING(bk.buluntu_tarihi,-4,4)';
+        $buluntu = $this->sql->query($query, true, false);
+
+        $results = array();
+
+        $div = '';
+        $chart = '';
+
+        foreach($buluntu as $b){
+            $results[$b->buluntu_yeri][$b->buluntu_yili] = $b->adet;
+        }
+
+        $toplamBuluntu = count($results);
+
+        $setcol = '12';
+        $setheight = '600px';
+
+        if($toplamBuluntu > 1) {
+            $setcol = '6';
+            $setheight = '400px';
+        }
+
+        $s = 0;
+
+        if($buluntu_yili_son == '')
+            $buluntu_yili_son = date('Y');
+
+        if($buluntu_yili_ilk != '') {
+            $buluntu_yili_ilk = $buluntu_yili_ilk.'-';
+        }else{
+            $buluntu_yili_son = '';
+        }
+
+        $yilBilgisi = $buluntu_yili_ilk.$buluntu_yili_son;
+
+        foreach($results as $key => $value){
+
+            $data = array();
+            $totalCount = 0;
+
+            $x = 0;
+            foreach($value as $a => $b){
+
+                $data[$x]['label'] = (string)$a;
+                $data[$x]['value'] =  $b;
+
+                $totalCount = $totalCount + intval($b);
+                $x++;
+            }
+
+            if($totalCount > 0){
+
+                $s++;
+
+                $div .= '<div class="col-md-'.$setcol.'" style="box-sizing: border-box;margin-top: 15px;"><div id="line_'.$s.'" style="border: 1px dotted #ddd;"></div></div>';
+
+                $chart .= 'FusionCharts.ready(function() {var myChart'.$s.' = new FusionCharts({type: "'.$grafik_tipi.'", renderAt: "line_'.$s.'", width: "100%", height: "'.$setheight.'", dataFormat: "json",';
+                $chart .= 'dataSource: {"chart": {"caption": "'.$key.' '.$yilBilgisi.' <br><br>","subcaption": "Toplam Buluntu: '.$totalCount.'","plottooltext": "$label yılına ait toplam <b>$value</b> buluntu mevcut", "showlegend": "1", "showpercentvalues": "0", "numbersuffix": " adet", "legendposition": "bottom", "theme": "fusion"},';
+
+                $chart .= '"data": ' . json_encode($data);
+                $chart .= '}';
+                $chart .= '}).render();});';
+            }
+
+        }
+
+        echo $div . '<script type="text/javascript">'. $chart . '</script>';
+    }
+
+
+    /* LISTELER */
+
+    function listeler(){
+
+        $this->sec('listeler');
+
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        load::view('ajax/listeler',$data);
+    }
+
+    function listeler_data()
+    {
+        $this->sec('listeler_data');
+        $this->datatables = load::library('datatable');
+
+        $this->datatables->select('l.list_id, l.list_adi, l.form, t.tip,  l.tip')
+            ->from('list_data as l')
+            ->leftJoin('list_tip as t', 'l.tip = t.id');
+
+        $this->datatables->edit_column('l.list_id', '$1', 'l.list_id')
+            ->edit_column('l.list_adi', '$1', 'l.list_adi')
+            ->edit_column('l.form', '$1', 'l.form')
+            ->edit_column('t.tip', '$1', 't.tip');
+
+        echo $this->datatables->generate();
+    }
+
+
+    /* AJAX */
+
+    function select_data($which = ''){
+
+        #Form alaninda kullanilan select elemanlarinin icerigini dinamik hale getirir.
+
+        load::helper("escape_str");
+
+        $term = escape_str(htmlspecialchars(strip_tags(addslashes(trim($_GET['q'])))));
+        $sql = '';
+
+        switch($which){
+            case 'anakod': $tip = 0; $sql = "SELECT anakod,anakod_id from anakod where anakod LIKE '$term%'"; break;
+            case 'buluntu': $tip = 1; break;
+            case 'formobje': $tip = 2; break;
+            case 'yapim_malzemesi': $tip = 3; break;
+            case 'uretim_yeri': $tip = 5; break;
+            case 'donem'; $tip = 6; break;
+            case 'tip': $tip = 4; break;
+            case 'renk': $tip = 7; break;
+            case 'yayin_kategorisi': $tip = 8; break;
+            default: die(); break;
+        }
+
+        # Islem tipi anakod degil ve parametre doluysa
+        $where = "";
+        if($term != '' && $tip != 0){
+            $where = " AND list_adi LIKE '%$term%' ";
+        }
+
+        # Islem tipi anakod degilse
+        if($tip != 0)
+            $sql = "SELECT list_id, list_adi from list_data where tip = $tip $where ORDER BY list_adi ASC";
+
+        # Eger parametre bos ise veri getirme (anakod)
+        if($tip == 0 && empty($term))
+            die();
+
+        $query = $this->sql->query($sql);
+        $data = array();
+
+        foreach ($query as $q) {
+            if($tip == 0)
+                array_push($data, array("id" => $q->anakod_id, "text" => stripslashes($q->anakod)));
+            else
+                array_push($data, array("id" => $q->list_id, "text" => stripslashes($q->list_adi)));
+        }
+
+        $results = array("results" => $data);
+
+        echo json_encode($results);
+    }
+
+    function acilir_liste_getir($tur = null, $ret = false, $id = 0){
+
+        # buluntu fonksiyonunda kullaniliyor, select icin..
+
+        $listeler = $this->sql->query("SELECT list_id, list_adi from list_data where durum = 1 AND tip = $tur order by list_id ASC", true, false);
+        $x = '<option value=""></option>';
+
+        $sec = '';
+        foreach ($listeler as $s) {
+            if($id != 0 && $s->list_id == $id){$sec = ' selected';}else{$sec = '';}
+            $x.= '<option value="'.$s->list_id.'" '.$sec.'>'.stripslashes($s->list_adi).'</option>';
+        }
+
+        if(!$ret){
+            echo $x;
+        }else{
+            return $x;
+        }
+
+    }
+
+    function log_getir($id = null, $tablo = 'anakod'){
+
+        # Detay sayfasindaki islem loglarini getirir, yetkili degilse sadece 5 kayit gosterir.
+
+        if(!is_numeric($id)){die();}
+
+        $tablo = addslashes(strip_tags($tablo));
+        $limit = 'limit 5';
+
+        if($_SESSION['yetki'] == 'S') $limit = '';
+
+        $data = $this->sql->query("SELECT l.log_id, l.tarih, k.adsoyad, l.islem from _log as l LEFT JOIN _kullanici as k ON l.kullanici_id = k.ID where l.data_id = " . $id . " AND l.tablo = '".$tablo."' order by log_id DESC $limit",true,false);
+
+        $datax = '';
+        foreach ($data as $item) {
+
+            $islem = '';
+            if($item->islem == 1){
+                $islem = ' <th style="font-weight: normal;color: #4B8230;">Oluşturuldu</th>';
+            }else{
+                $islem = ' <th style="font-weight: normal;color: #99783B;">Güncellendi</th>';
+            }
+
+            $datax .= '<tr>
+                            <th style="font-weight: normal;">'.$item->log_id.'</th>
+                            <th style="font-weight: normal;">'.$item->tarih.'</th>
+                            <th style="font-weight: normal;font-style: italic;">'.$item->adsoyad.'</th>
+                            '.$islem.'
+                       </tr>';
+        }
+
+        echo  '<tr><th width="40px">ID</th><th>Tarih</th><th width="150px">Kullanıcı</th><th width="100px">İşlem</th></tr>' . $datax;
+
+    }
+
+
+    /* GENEL */
+
+    function genel_ayarlar()
+    {
+
+        $this->sec('genel_ayarlar');
+        load::helper('csrf_generate');
+
+        $data['token'] = csrf_generate();
+        $data['q'] = $this->sql->from('genel_ayarlar')->where('id = 1')->get();
+
+        load::view('modal/genel_ayarlar', $data);
+    }
+
+    function cikis()
+    {
+        @$this->sql->from('_kullanici')->where('ID = '. $_SESSION['ID'])->update(array('online' => 0));
+        Session::destroy();
+        echo '<meta http-equiv="refresh" content="0;URL='.Url::base().'">';
+        die();
+    }
+
+    /* Private */
+
+    private function gecen_sure($tarih)
+    {
+        if($tarih == '')
+            die();
+
+        # Kimler Online sayfası icin hesaplama yapar..
+        $time_difference = time() - strtotime($tarih);
+
+        $seconds = $time_difference;
+        $minutes = round($time_difference / 60);
+        $hours = round($time_difference / 3600);
+        $days = round($time_difference / 86400);
+
+        # Seconds
+        if ($seconds <= 60) {
+            $saniye = "$seconds saniye";
+        } //Minutes
+        else if ($minutes <= 60) {
+
+            if ($minutes == 1) {
+                $dakika = "1 dakika";
+            } else {
+                $dakika = " $minutes dakika";
+            }
+        } # Hours
+        else if ($hours <= 24) {
+
+            if ($hours == 1) {
+                $saat = "1 saat";
+            } else {
+                $saat = " $hours saat";
+            }
+        } # Days
+        else {
+
+            if ($days == 1) {
+                $gun = "1 gün";
+            } else {
+                $gun = "$days gün";
+            }
+        }
+
+        if ($hours >= 1 && $hours <= 24) {
+            $hesap = $hours * 60;
+            $dakika = " " . abs($hesap - $minutes) . " dakika";
+        }
+
+        # return $minutes;
+        return $gun . $saat . $dakika . $saniye;
+    }
+
+    private function sec($segment = '') {
+
+        //.A0, .B0, .AR0, .EY0, .DL0, .PD0, .E0, .R0
+        //.A1, .B1, .AR1, .EY1, .DL1, .PD1, .E1, .R1
+        //.A2, .B2, .AR2, .EY2, .DL2, .PD2, .E2, .R2
+        //.A3, .B3, .AR3, .EY3, .DL3, .PD3, .E3, .R3
+
+        if($_SESSION['yetki'] != 'S'){
+            $yetki = $_SESSION['kisitlamalar'];
+
+            $_A = array('A0','A1','A2');
+            $A = array('anakod_listesi,anakod_listesi_data,anakod_detay','anakod_ekle','anakod_duzenle');
+            $kontrol = str_replace($_A,$A,$yetki);
+
+            $_B = array('B0','B1','B2');
+            $B = array('buluntu_listesi,buluntu_listesi_data,buluntu_detay,buluntu_galeri','buluntu_ekle','buluntu_duzenle');
+            $kontrol .= str_replace($_B,$B, $yetki);
+
+            $_AR = array('AR0','AR1','AR2');
+            $AR = array('acma_rapor_listesi,acma_rapor_listesi_data,acma_rapor_detay,acma_rapor_galeri','acma_rapor_ekle','acma_rapor_duzenle');
+            $kontrol .= str_replace($_AR,$AR, $yetki);
+
+
+            $_EY = array('EY0','EY1','EY2');
+            $EY = array('evrak_listesi,evrak_listesi_data,evrak_detay','evrak_ekle','evrak_duzenle');
+            $kontrol .= str_replace($_EY,$EY,$yetki);
+
+
+            $_DL = array('DL0','DL1','DL2','DL3');
+            $DL = array('demirbas_listesi,demirbas_listesi_data,demirbas_detay','demirbas_ekle','demirbas_duzenle');
+            $kontrol .= str_replace($_DL,$DL,$yetki);
+
+
+            $_Y = array('Y0','Y1','Y2','Y3');
+            $Y = array('yayin_listesi,yayin_listesi_data,yayin_detay','yayin_ekle','yayin_duzenle');
+            $kontrol .= str_replace($_Y,$Y,$yetki);
+
+
+            $_R = array('R0');
+            $R = array('raporlar');
+            $kontrol .= str_replace($_R,$R,$yetki);
+
+
+            /*
+             $_DELETE = array('A3','B3','AR3');
+             $DELETE = array('projeler_sil','cari_kartlar_sil','yolcu_kartlari_sil','araclar_sil','faturalar_sil');
+             $kontrol .= str_replace($_DELETE,$DELETE, $yetki);
+            */
+
+
+            $yarr = explode(',',$kontrol);
+
+            if (!in_array($segment, $yarr, true)) {
+                load::view('404');
+                die();
+            }
+
+        }
+
+    }
+
+    private function session_check(){
+        $time_difference = strtotime(date("d.m.Y H:i")) - $_SESSION['islem_tarihi'];
+        $hours = round($time_difference / 3600);
+        //$days = round($time_difference / 86400);
+
+        $id = $_SESSION['ID'];
+
+        if($hours > 0){
+            @$this->sql->from('_kullanici')->where('ID = '. $id)->update(array('online' => 0));
+            echo '<meta http-equiv="refresh" content="0;URL='.Url::base().'">';
+            header("Location: " . Url::base());
+            Session::destroy();
+            die();
+        }
+
+        $_SESSION['islem_tarihi'] = strtotime(date("d.m.Y H:i"));
+    }
+
+}

@@ -1,0 +1,41 @@
+@charset "utf-8";
+/**
+ * @see https://github.com/dyve/jquery-autocomplete
+ */
+.acResults {
+        margin: 0px;
+	padding: 0px;
+	border: 1px solid WindowFrame;
+	background-color: Window;
+	overflow: hidden;
+        z-index: 9999;
+        left: 219px !important;
+}
+
+.acResults ul {
+        min-width: 100px;
+	margin: 0px;
+	padding: 0px;
+	list-style-position: outside;
+	list-style: none;	
+}
+
+.acResults ul li {
+	margin: 3px 0 0 0;
+	padding: 2px 5px;
+	cursor: pointer;
+	display: block;
+	font: Tahoma, sans-serif;
+	font-size: 15px;
+	overflow: hidden;
+        
+}
+
+.acLoading {
+	background : url('indicator.gif') right center no-repeat;
+}
+
+.acSelect {
+	background-color: #508180;
+	color: white;
+}

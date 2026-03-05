@@ -1,0 +1,48 @@
+aside{
+    border-bottom-color: transparent;
+    background-color: transparent;
+
+
+    background:-moz-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background:-webkit-gradient(linear,left top,right top,color-stop(93%,#41454C),color-stop(100%,#292F3A));
+    background:-webkit-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background:-o-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background:-ms-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background-image: linear-gradient(to right, #41454C 0, #292F3A 75%);
+
+    background-repeat: repeat-x;
+}
+
+#ribbon {
+    background: #3B3F44;
+
+}
+
+
+.page-footer{
+
+    background:-moz-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background:-webkit-gradient(linear,left top,right top,color-stop(93%,#41454C),color-stop(100%,#292F3A));
+    background:-webkit-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background:-o-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background:-ms-linear-gradient(left,#41454C 93%,#292F3A 100%);
+    background-image: linear-gradient(to right, #41454C 0, #292F3A 85%);
+}
+
+.menu-on-top nav ul ul li a:hover,.menu-on-top nav ul ul li:hover>a,.menu-on-top nav ul ul ul li a:hover{color:#fff;background-color:#3B3F44}
+.nav-tabs>li.active>a {-webkit-box-shadow: 0 -2px 0 #3B3F44; -moz-box-shadow: 0 -2px 0 #3B3F44; box-shadow: 0 -2px 0 #3B3F44;}
+
+nav ul li a{
+
+}
+
+.jarviswidget-color-teal>header{
+    border-color: #3B3F44!important;
+    background: #3B3F44;
+}
+
+
+.jarviswidget-color-darken>header {
+    border-color: #3B3F44!important;
+    background: #3B3F44;
+}
