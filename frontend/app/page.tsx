@@ -22,6 +22,7 @@ export default async function HomePage() {
       <h1>NAPI - Django + Next.js Migration Dashboard</h1>
       <p>Legacy modülleri kademeli olarak yeni altyapıya taşıyoruz.</p>
 
+      <p><a href="/login">Legacy uyumlu giriş ekranı</a></p>
       <ModuleStatusList items={modules} />
       <AnakodPreviewTable items={anakodItems} />
       <BuluntuPreviewTable items={buluntuItems} />

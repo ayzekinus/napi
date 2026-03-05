@@ -1,5 +1,56 @@
+import json
+
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from .services import verify_legacy_credentials
 
 
 def health(_request):
     return JsonResponse({'ok': True, 'service': 'django-backend'})
+
+
+@csrf_exempt
+def auth_login(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'reason': 'method_not_allowed'}, status=405)
+
+    try:
+        payload = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        payload = {}
+
+    username = str(payload.get('username', '')).strip()
+    password = str(payload.get('password', ''))
+
+    result = verify_legacy_credentials(username=username, password=password)
+
+    if not result.success:
+        return JsonResponse({'success': False, 'reason': result.reason}, status=401)
+
+    request.session['oturum'] = True
+    request.session['ID'] = result.user['ID']
+    request.session['kullanici'] = result.user['kullanici']
+    request.session['adsoyad'] = result.user['adsoyad']
+    request.session['yetki'] = result.user['yetki']
+    request.session['kisitlamalar'] = result.user['kisitlamalar']
+
+    return JsonResponse({'success': True, 'user': result.user})
+
+
+def auth_session(request):
+    if not request.session.get('oturum'):
+        return JsonResponse({'authenticated': False}, status=401)
+
+    return JsonResponse(
+        {
+            'authenticated': True,
+            'user': {
+                'ID': request.session.get('ID'),
+                'kullanici': request.session.get('kullanici'),
+                'adsoyad': request.session.get('adsoyad'),
+                'yetki': request.session.get('yetki'),
+                'kisitlamalar': request.session.get('kisitlamalar'),
+            },
+        }
+    )
