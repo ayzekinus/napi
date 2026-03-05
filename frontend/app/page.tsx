@@ -1,0 +1,44 @@
+import { AcmaRaporPreviewTable } from '@/components/acma-rapor-preview-table'
+import { AnakodPreviewTable } from '@/components/anakod-preview-table'
+import { BuluntuPreviewTable } from '@/components/buluntu-preview-table'
+import { DemirbasPreviewTable } from '@/components/demirbas-preview-table'
+import { EvrakPreviewTable } from '@/components/evrak-preview-table'
+import { ModuleStatusList } from '@/components/module-status-list'
+import { KullanicilarPreviewTable } from '@/components/kullanicilar-preview-table'
+import {
+  getAcmaRaporList,
+  getAnakodList,
+  getBuluntuList,
+  getDemirbasList,
+  getEvrakList,
+  getModuleInventory,
+  getKullanicilarList,
+} from '@/lib/api'
+
+export default async function HomePage() {
+  const [modules, anakodItems, buluntuItems, demirbasItems, evrakItems, acmaRaporItems, kullaniciItems] = await Promise.all([
+    getModuleInventory(),
+    getAnakodList(10),
+    getBuluntuList(10),
+    getDemirbasList(10),
+    getEvrakList(10),
+    getAcmaRaporList(10),
+    getKullanicilarList(10),
+  ])
+
+  return (
+    <main style={{ fontFamily: 'sans-serif', padding: 24 }}>
+      <h1>NAPI - Django + Next.js Migration Dashboard</h1>
+      <p>Legacy modülleri kademeli olarak yeni altyapıya taşıyoruz.</p>
+
+      <p><a href="/login">Legacy uyumlu giriş ekranı</a></p>
+      <ModuleStatusList items={modules} />
+      <AnakodPreviewTable items={anakodItems} />
+      <BuluntuPreviewTable items={buluntuItems} />
+      <DemirbasPreviewTable items={demirbasItems} />
+      <EvrakPreviewTable items={evrakItems} />
+      <AcmaRaporPreviewTable items={acmaRaporItems} />
+      <KullanicilarPreviewTable items={kullaniciItems} />
+    </main>
+  )
+}
