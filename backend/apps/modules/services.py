@@ -130,3 +130,32 @@ def list_acma_rapor(limit: int = 50) -> QueryResult:
         for row in rows
     ]
     return QueryResult(items=items, degraded=False)
+
+
+def list_demirbas(limit: int = 50) -> QueryResult:
+    safe_limit = _safe_limit(limit)
+
+    query = """
+        SELECT dl_id, buluntu_id, envanter_no, durum
+        FROM demirbas_listesi
+        ORDER BY dl_id DESC
+        LIMIT %s
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query, [safe_limit])
+            rows = cursor.fetchall()
+    except DatabaseError:
+        return QueryResult(items=[], degraded=True)
+
+    items = [
+        {
+            'dl_id': row[0],
+            'buluntu_id': row[1],
+            'envanter_no': row[2],
+            'durum': row[3],
+        }
+        for row in rows
+    ]
+    return QueryResult(items=items, degraded=False)

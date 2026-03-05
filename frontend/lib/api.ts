@@ -22,6 +22,13 @@ export type EvrakItem = {
   evrak_tarihi: string | null
 }
 
+export type DemirbasItem = {
+  dl_id: number
+  buluntu_id: number
+  envanter_no: string
+  durum: number
+}
+
 export type AcmaRaporItem = {
   acma_rapor_id: number
   acma_rapor_no: string
@@ -91,5 +98,19 @@ export async function getAcmaRaporList(limit = 10): Promise<AcmaRaporItem[]> {
   }
 
   const data = (await response.json()) as { items?: AcmaRaporItem[] }
+  return data.items ?? []
+}
+
+
+export async function getDemirbasList(limit = 10): Promise<DemirbasItem[]> {
+  const response = await fetch(`${API_BASE}/modules/demirbas?limit=${limit}`, {
+    cache: 'no-store',
+  })
+
+  if (!response.ok) {
+    return []
+  }
+
+  const data = (await response.json()) as { items?: DemirbasItem[] }
   return data.items ?? []
 }

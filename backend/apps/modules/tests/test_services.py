@@ -8,6 +8,7 @@ from apps.modules.services import (
     list_acma_rapor,
     list_anakod,
     list_buluntu,
+    list_demirbas,
     list_evrak,
 )
 
@@ -157,6 +158,49 @@ class ListAcmaRaporServiceTests(SimpleTestCase):
         connection_mock.cursor.side_effect = DatabaseError('db error')
 
         result = list_acma_rapor(limit=25)
+
+        self.assertTrue(result.degraded)
+        self.assertEqual(result.items, [])
+
+
+
+class ListDemirbasServiceTests(SimpleTestCase):
+    @patch('apps.modules.services.connection')
+    def test_list_demirbas_returns_rows(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = [
+            (200, 9, 'D-100', 1),
+            (199, 8, 'D-099', 0),
+        ]
+
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        result = list_demirbas(limit=2)
+
+        self.assertFalse(result.degraded)
+        self.assertEqual(
+            result.items,
+            [
+                {
+                    'dl_id': 200,
+                    'buluntu_id': 9,
+                    'envanter_no': 'D-100',
+                    'durum': 1,
+                },
+                {
+                    'dl_id': 199,
+                    'buluntu_id': 8,
+                    'envanter_no': 'D-099',
+                    'durum': 0,
+                },
+            ],
+        )
+
+    @patch('apps.modules.services.connection')
+    def test_list_demirbas_handles_db_error(self, connection_mock):
+        connection_mock.cursor.side_effect = DatabaseError('db error')
+
+        result = list_demirbas(limit=25)
 
         self.assertTrue(result.degraded)
         self.assertEqual(result.items, [])

@@ -5,6 +5,7 @@ from .views import (
     anakod_list,
     buluntu_list,
     evrak_list,
+    demirbas_list,
     module_inventory,
 )
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('buluntu', buluntu_list, name='buluntu-list'),
     path('evrak', evrak_list, name='evrak-list'),
     path('acma-rapor', acma_rapor_list, name='acma-rapor-list'),
+    path('demirbas', demirbas_list, name='demirbas-list'),
 ]
