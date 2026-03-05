@@ -22,6 +22,12 @@ export type EvrakItem = {
   evrak_tarihi: string | null
 }
 
+export type AcmaRaporItem = {
+  acma_rapor_id: number
+  acma_rapor_no: string
+  sezon: string
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api'
 
 export async function getModuleInventory(): Promise<ModuleInventoryItem[]> {
@@ -72,5 +78,18 @@ export async function getEvrakList(limit = 10): Promise<EvrakItem[]> {
   }
 
   const data = (await response.json()) as { items?: EvrakItem[] }
+  return data.items ?? []
+}
+
+export async function getAcmaRaporList(limit = 10): Promise<AcmaRaporItem[]> {
+  const response = await fetch(`${API_BASE}/modules/acma-rapor?limit=${limit}`, {
+    cache: 'no-store',
+  })
+
+  if (!response.ok) {
+    return []
+  }
+
+  const data = (await response.json()) as { items?: AcmaRaporItem[] }
   return data.items ?? []
 }

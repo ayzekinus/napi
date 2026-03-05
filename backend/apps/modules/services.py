@@ -102,3 +102,31 @@ def list_evrak(limit: int = 50) -> QueryResult:
         for row in rows
     ]
     return QueryResult(items=items, degraded=False)
+
+
+def list_acma_rapor(limit: int = 50) -> QueryResult:
+    safe_limit = _safe_limit(limit)
+
+    query = """
+        SELECT acma_rapor_id, acma_rapor_no, sezon
+        FROM acma_rapor
+        ORDER BY acma_rapor_id DESC
+        LIMIT %s
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query, [safe_limit])
+            rows = cursor.fetchall()
+    except DatabaseError:
+        return QueryResult(items=[], degraded=True)
+
+    items = [
+        {
+            'acma_rapor_id': row[0],
+            'acma_rapor_no': row[1],
+            'sezon': row[2],
+        }
+        for row in rows
+    ]
+    return QueryResult(items=items, degraded=False)

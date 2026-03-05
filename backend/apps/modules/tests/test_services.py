@@ -4,7 +4,12 @@ from unittest.mock import Mock, patch
 from django.db import DatabaseError
 from django.test import SimpleTestCase
 
-from apps.modules.services import list_anakod, list_buluntu, list_evrak
+from apps.modules.services import (
+    list_acma_rapor,
+    list_anakod,
+    list_buluntu,
+    list_evrak,
+)
 
 
 class ListAnakodServiceTests(SimpleTestCase):
@@ -112,6 +117,46 @@ class ListEvrakServiceTests(SimpleTestCase):
         connection_mock.cursor.side_effect = DatabaseError('db error')
 
         result = list_evrak(limit=25)
+
+        self.assertTrue(result.degraded)
+        self.assertEqual(result.items, [])
+
+
+class ListAcmaRaporServiceTests(SimpleTestCase):
+    @patch('apps.modules.services.connection')
+    def test_list_acma_rapor_returns_rows(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = [
+            (501, 'AR-2024-10', '2024'),
+            (500, 'AR-2024-09', '2024'),
+        ]
+
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        result = list_acma_rapor(limit=2)
+
+        self.assertFalse(result.degraded)
+        self.assertEqual(
+            result.items,
+            [
+                {
+                    'acma_rapor_id': 501,
+                    'acma_rapor_no': 'AR-2024-10',
+                    'sezon': '2024',
+                },
+                {
+                    'acma_rapor_id': 500,
+                    'acma_rapor_no': 'AR-2024-09',
+                    'sezon': '2024',
+                },
+            ],
+        )
+
+    @patch('apps.modules.services.connection')
+    def test_list_acma_rapor_handles_db_error(self, connection_mock):
+        connection_mock.cursor.side_effect = DatabaseError('db error')
+
+        result = list_acma_rapor(limit=25)
 
         self.assertTrue(result.degraded)
         self.assertEqual(result.items, [])
