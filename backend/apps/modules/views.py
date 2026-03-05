@@ -1,13 +1,13 @@
 from django.http import JsonResponse
 
-from .services import list_anakod, list_buluntu
+from .services import list_anakod, list_buluntu, list_evrak
 
 
 LEGACY_MODULES = [
     {'key': 'anakod', 'status': 'in_progress'},
     {'key': 'buluntu', 'status': 'in_progress'},
     {'key': 'acma_rapor', 'status': 'planned'},
-    {'key': 'evrak_yonetimi', 'status': 'planned'},
+    {'key': 'evrak_yonetimi', 'status': 'in_progress'},
     {'key': 'demirbas', 'status': 'planned'},
     {'key': 'kullanicilar', 'status': 'planned'},
 ]
@@ -41,6 +41,19 @@ def buluntu_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
     result = list_buluntu(limit=limit)
+    return JsonResponse(
+        {
+            'items': result.items,
+            'count': len(result.items),
+            'degraded': result.degraded,
+        }
+    )
+
+
+def evrak_list(request):
+    limit = _parse_limit(request.GET.get('limit', '50'))
+
+    result = list_evrak(limit=limit)
     return JsonResponse(
         {
             'items': result.items,

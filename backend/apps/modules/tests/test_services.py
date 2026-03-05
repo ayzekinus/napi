@@ -1,9 +1,10 @@
+from datetime import date
 from unittest.mock import Mock, patch
 
 from django.db import DatabaseError
 from django.test import SimpleTestCase
 
-from apps.modules.services import list_anakod, list_buluntu
+from apps.modules.services import list_anakod, list_buluntu, list_evrak
 
 
 class ListAnakodServiceTests(SimpleTestCase):
@@ -69,6 +70,48 @@ class ListBuluntuServiceTests(SimpleTestCase):
         connection_mock.cursor.side_effect = DatabaseError('db error')
 
         result = list_buluntu(limit=25)
+
+        self.assertTrue(result.degraded)
+        self.assertEqual(result.items, [])
+
+
+class ListEvrakServiceTests(SimpleTestCase):
+    @patch('apps.modules.services.connection')
+    def test_list_evrak_returns_rows(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = [
+            (101, 'Gelen', 'EV-55', date(2024, 5, 12)),
+            (100, 'Giden', 'EV-54', None),
+        ]
+
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        result = list_evrak(limit=2)
+
+        self.assertFalse(result.degraded)
+        self.assertEqual(
+            result.items,
+            [
+                {
+                    'evrak_id': 101,
+                    'evrak_tipi': 'Gelen',
+                    'evrak_no': 'EV-55',
+                    'evrak_tarihi': '2024-05-12',
+                },
+                {
+                    'evrak_id': 100,
+                    'evrak_tipi': 'Giden',
+                    'evrak_no': 'EV-54',
+                    'evrak_tarihi': None,
+                },
+            ],
+        )
+
+    @patch('apps.modules.services.connection')
+    def test_list_evrak_handles_db_error(self, connection_mock):
+        connection_mock.cursor.side_effect = DatabaseError('db error')
+
+        result = list_evrak(limit=25)
 
         self.assertTrue(result.degraded)
         self.assertEqual(result.items, [])

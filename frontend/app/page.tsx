@@ -1,13 +1,20 @@
 import { AnakodPreviewTable } from '@/components/anakod-preview-table'
 import { BuluntuPreviewTable } from '@/components/buluntu-preview-table'
+import { EvrakPreviewTable } from '@/components/evrak-preview-table'
 import { ModuleStatusList } from '@/components/module-status-list'
-import { getAnakodList, getBuluntuList, getModuleInventory } from '@/lib/api'
+import {
+  getAnakodList,
+  getBuluntuList,
+  getEvrakList,
+  getModuleInventory,
+} from '@/lib/api'
 
 export default async function HomePage() {
-  const [modules, anakodItems, buluntuItems] = await Promise.all([
+  const [modules, anakodItems, buluntuItems, evrakItems] = await Promise.all([
     getModuleInventory(),
     getAnakodList(10),
     getBuluntuList(10),
+    getEvrakList(10),
   ])
 
   return (
@@ -18,6 +25,7 @@ export default async function HomePage() {
       <ModuleStatusList items={modules} />
       <AnakodPreviewTable items={anakodItems} />
       <BuluntuPreviewTable items={buluntuItems} />
+      <EvrakPreviewTable items={evrakItems} />
     </main>
   )
 }

@@ -73,3 +73,32 @@ def list_buluntu(limit: int = 50) -> QueryResult:
         for row in rows
     ]
     return QueryResult(items=items, degraded=False)
+
+
+def list_evrak(limit: int = 50) -> QueryResult:
+    safe_limit = _safe_limit(limit)
+
+    query = """
+        SELECT evrak_id, evrak_tipi, evrak_no, evrak_tarihi
+        FROM evrak_yonetimi
+        ORDER BY evrak_id DESC
+        LIMIT %s
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query, [safe_limit])
+            rows = cursor.fetchall()
+    except DatabaseError:
+        return QueryResult(items=[], degraded=True)
+
+    items = [
+        {
+            'evrak_id': row[0],
+            'evrak_tipi': row[1],
+            'evrak_no': row[2],
+            'evrak_tarihi': row[3].isoformat() if row[3] is not None else None,
+        }
+        for row in rows
+    ]
+    return QueryResult(items=items, degraded=False)

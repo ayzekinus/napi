@@ -3,7 +3,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.modules.views import anakod_list, buluntu_list
+from apps.modules.views import anakod_list, buluntu_list, evrak_list
 
 
 class AnakodListViewTests(SimpleTestCase):
@@ -36,3 +36,19 @@ class BuluntuListViewTests(SimpleTestCase):
 
         self.assertEqual(response.status_code, 200)
         list_buluntu_mock.assert_called_once_with(limit=50)
+
+
+class EvrakListViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    @patch('apps.modules.views.list_evrak')
+    def test_evrak_list_with_invalid_limit_uses_default(self, list_evrak_mock):
+        list_evrak_mock.return_value.items = []
+        list_evrak_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/evrak?limit=abc')
+        response = evrak_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_evrak_mock.assert_called_once_with(limit=50)
