@@ -17,6 +17,12 @@ class ParseLimitTests(SimpleTestCase):
     def test_parse_limit_clamps_to_maximum(self):
         self.assertEqual(_parse_limit('999999', default=10), 500)
 
+    def test_parse_limit_uses_custom_bounds(self):
+        self.assertEqual(_parse_limit('40', default=10, minimum=5, maximum=30), 30)
+
+    def test_parse_limit_respects_custom_in_range_value(self):
+        self.assertEqual(_parse_limit('12', default=10, minimum=5, maximum=30), 12)
+
 
 
 class ModuleInventoryViewTests(SimpleTestCase):
