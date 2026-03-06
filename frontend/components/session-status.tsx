@@ -20,31 +20,37 @@ export function SessionStatus() {
 
   async function loadSession() {
     setLoading(true)
-    const sessionResponse = await fetch(`${API_BASE}/auth/session`, {
-      credentials: 'include',
-      cache: 'no-store',
-    })
 
-    if (!sessionResponse.ok) {
+    try {
+      const sessionResponse = await fetch(`${API_BASE}/auth/session`, {
+        credentials: 'include',
+        cache: 'no-store',
+      })
+
+      if (!sessionResponse.ok) {
+        setUser(null)
+        setPermissions(null)
+        setLoading(false)
+        return
+      }
+
+      const sessionData = (await sessionResponse.json()) as { authenticated?: boolean; user?: SessionUser }
+      const currentUser = sessionData.authenticated ? (sessionData.user ?? null) : null
+      setUser(currentUser)
+
+      const permissionResponse = await fetch(`${API_BASE}/auth/permissions`, {
+        credentials: 'include',
+        cache: 'no-store',
+      })
+
+      if (permissionResponse.ok) {
+        const permissionData = (await permissionResponse.json()) as { permissions?: PermissionMap }
+        setPermissions(permissionData.permissions ?? null)
+      } else {
+        setPermissions(null)
+      }
+    } catch {
       setUser(null)
-      setPermissions(null)
-      setLoading(false)
-      return
-    }
-
-    const sessionData = (await sessionResponse.json()) as { authenticated?: boolean; user?: SessionUser }
-    const currentUser = sessionData.authenticated ? (sessionData.user ?? null) : null
-    setUser(currentUser)
-
-    const permissionResponse = await fetch(`${API_BASE}/auth/permissions`, {
-      credentials: 'include',
-      cache: 'no-store',
-    })
-
-    if (permissionResponse.ok) {
-      const permissionData = (await permissionResponse.json()) as { permissions?: PermissionMap }
-      setPermissions(permissionData.permissions ?? null)
-    } else {
       setPermissions(null)
     }
 
@@ -52,11 +58,14 @@ export function SessionStatus() {
   }
 
   async function logout() {
-    await fetch(`${API_BASE}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    })
-    await loadSession()
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+    } finally {
+      await loadSession()
+    }
   }
 
   useEffect(() => {

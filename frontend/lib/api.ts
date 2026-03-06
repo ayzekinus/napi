@@ -54,106 +54,61 @@ export type DashboardSummary = {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api'
 
-export async function getModuleInventory(): Promise<ModuleInventoryItem[]> {
-  const response = await fetch(`${API_BASE}/modules/inventory`, {
-    cache: 'no-store',
-  })
-  if (!response.ok) {
-    return []
-  }
+async function safeFetchJson<T>(path: string): Promise<T | null> {
+  try {
+    const response = await fetch(`${API_BASE}${path}`, {
+      cache: 'no-store',
+    })
 
-  const data = (await response.json()) as { modules?: ModuleInventoryItem[] }
-  return data.modules ?? []
+    if (!response.ok) {
+      return null
+    }
+
+    return (await response.json()) as T
+  } catch {
+    return null
+  }
+}
+
+export async function getModuleInventory(): Promise<ModuleInventoryItem[]> {
+  const data = await safeFetchJson<{ modules?: ModuleInventoryItem[] }>('/modules/inventory')
+  return data?.modules ?? []
 }
 
 export async function getAnakodList(limit = 10): Promise<AnakodItem[]> {
-  const response = await fetch(`${API_BASE}/modules/anakod?limit=${limit}`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return []
-  }
-
-  const data = (await response.json()) as { items?: AnakodItem[] }
-  return data.items ?? []
+  const data = await safeFetchJson<{ items?: AnakodItem[] }>(`/modules/anakod?limit=${limit}`)
+  return data?.items ?? []
 }
 
 export async function getBuluntuList(limit = 10): Promise<BuluntuItem[]> {
-  const response = await fetch(`${API_BASE}/modules/buluntu?limit=${limit}`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return []
-  }
-
-  const data = (await response.json()) as { items?: BuluntuItem[] }
-  return data.items ?? []
+  const data = await safeFetchJson<{ items?: BuluntuItem[] }>(`/modules/buluntu?limit=${limit}`)
+  return data?.items ?? []
 }
 
 export async function getEvrakList(limit = 10): Promise<EvrakItem[]> {
-  const response = await fetch(`${API_BASE}/modules/evrak?limit=${limit}`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return []
-  }
-
-  const data = (await response.json()) as { items?: EvrakItem[] }
-  return data.items ?? []
+  const data = await safeFetchJson<{ items?: EvrakItem[] }>(`/modules/evrak?limit=${limit}`)
+  return data?.items ?? []
 }
 
 export async function getAcmaRaporList(limit = 10): Promise<AcmaRaporItem[]> {
-  const response = await fetch(`${API_BASE}/modules/acma-rapor?limit=${limit}`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return []
-  }
-
-  const data = (await response.json()) as { items?: AcmaRaporItem[] }
-  return data.items ?? []
+  const data = await safeFetchJson<{ items?: AcmaRaporItem[] }>(`/modules/acma-rapor?limit=${limit}`)
+  return data?.items ?? []
 }
-
 
 export async function getDemirbasList(limit = 10): Promise<DemirbasItem[]> {
-  const response = await fetch(`${API_BASE}/modules/demirbas?limit=${limit}`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return []
-  }
-
-  const data = (await response.json()) as { items?: DemirbasItem[] }
-  return data.items ?? []
+  const data = await safeFetchJson<{ items?: DemirbasItem[] }>(`/modules/demirbas?limit=${limit}`)
+  return data?.items ?? []
 }
-
 
 export async function getKullanicilarList(limit = 10): Promise<KullaniciItem[]> {
-  const response = await fetch(`${API_BASE}/modules/kullanicilar?limit=${limit}`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return []
-  }
-
-  const data = (await response.json()) as { items?: KullaniciItem[] }
-  return data.items ?? []
+  const data = await safeFetchJson<{ items?: KullaniciItem[] }>(`/modules/kullanicilar?limit=${limit}`)
+  return data?.items ?? []
 }
 
-
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const response = await fetch(`${API_BASE}/modules/dashboard-summary`, {
-    cache: 'no-store',
-  })
-
-  if (!response.ok) {
-    return {
+  const data = await safeFetchJson<{ summary?: DashboardSummary }>('/modules/dashboard-summary')
+  return (
+    data?.summary ?? {
       anakod: 0,
       buluntu: 0,
       acma_rapor: 0,
@@ -161,15 +116,5 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
       demirbas: 0,
       kullanicilar: 0,
     }
-  }
-
-  const data = (await response.json()) as { summary?: DashboardSummary }
-  return data.summary ?? {
-    anakod: 0,
-    buluntu: 0,
-    acma_rapor: 0,
-    evrak: 0,
-    demirbas: 0,
-    kullanicilar: 0,
-  }
+  )
 }
