@@ -4,7 +4,24 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, dashboard_bootstrap, dashboard_bootstrap_full, dashboard_summary, demirbas_list, evrak_list, kullanicilar_list
+from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, dashboard_bootstrap, dashboard_bootstrap_full, dashboard_summary, demirbas_list, evrak_list, kullanicilar_list, module_inventory
+
+
+class ModuleInventoryViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_module_inventory_includes_evrak_key(self):
+        request = self.factory.get('/api/modules/inventory')
+        response = module_inventory(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+
+        keys = [item['key'] for item in payload['modules']]
+        self.assertIn('evrak', keys)
+        self.assertNotIn('evrak_yonetimi', keys)
+
 
 
 class AnakodListViewTests(SimpleTestCase):
@@ -119,6 +136,7 @@ class DashboardSummaryViewTests(SimpleTestCase):
         response = dashboard_summary(request)
 
         self.assertEqual(response.status_code, 200)
+
         summary_mock.assert_called_once_with()
 
 
@@ -136,6 +154,11 @@ class DashboardBootstrapViewTests(SimpleTestCase):
         response = dashboard_bootstrap(request)
 
         self.assertEqual(response.status_code, 200)
+
+        payload = json.loads(response.content.decode('utf-8'))
+        keys = [item['key'] for item in payload['modules']]
+        self.assertIn('evrak', keys)
+
         summary_mock.assert_called_once_with()
 
 

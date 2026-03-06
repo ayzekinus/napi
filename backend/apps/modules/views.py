@@ -7,7 +7,7 @@ LEGACY_MODULES = [
     {'key': 'anakod', 'status': 'in_progress'},
     {'key': 'buluntu', 'status': 'in_progress'},
     {'key': 'acma_rapor', 'status': 'in_progress'},
-    {'key': 'evrak_yonetimi', 'status': 'in_progress'},
+    {'key': 'evrak', 'status': 'in_progress'},
     {'key': 'demirbas', 'status': 'in_progress'},
     {'key': 'kullanicilar', 'status': 'in_progress'},
 ]
