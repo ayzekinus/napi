@@ -11,6 +11,27 @@ class AuthLoginViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
+    def test_login_requires_post(self):
+        request = self.factory.get('/api/auth/login')
+        request.session = {}
+        response = auth_login(request)
+
+        self.assertEqual(response.status_code, 405)
+
+
+    @patch('apps.core.views.verify_legacy_credentials')
+    def test_login_handles_invalid_json_body(self, verify_mock):
+        verify_mock.return_value.success = False
+        verify_mock.return_value.reason = 'invalid_credentials'
+
+        request = self.factory.post('/api/auth/login', data='{"', content_type='application/json')
+        request.session = {}
+
+        response = auth_login(request)
+
+        self.assertEqual(response.status_code, 401)
+        verify_mock.assert_called_once_with(username='', password='')
+
     @patch('apps.core.views.verify_legacy_credentials')
     def test_login_rejects_invalid_credentials(self, verify_mock):
         verify_mock.return_value.success = False
