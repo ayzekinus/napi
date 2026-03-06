@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 
 from .services import get_dashboard_summary, list_acma_rapor, list_anakod, list_buluntu, list_demirbas, list_evrak, list_kullanicilar
 
@@ -22,10 +23,12 @@ def _parse_limit(raw_limit: str, default: int = 50, minimum: int = 1, maximum: i
     return max(minimum, min(parsed, maximum))
 
 
+@require_GET
 def module_inventory(_request):
     return JsonResponse({'modules': LEGACY_MODULES})
 
 
+@require_GET
 def anakod_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
@@ -39,6 +42,7 @@ def anakod_list(request):
     )
 
 
+@require_GET
 def buluntu_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
@@ -52,6 +56,7 @@ def buluntu_list(request):
     )
 
 
+@require_GET
 def evrak_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
@@ -65,6 +70,7 @@ def evrak_list(request):
     )
 
 
+@require_GET
 def acma_rapor_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
@@ -79,6 +85,7 @@ def acma_rapor_list(request):
 
 
 
+@require_GET
 def demirbas_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
@@ -93,6 +100,7 @@ def demirbas_list(request):
 
 
 
+@require_GET
 def kullanicilar_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
@@ -107,6 +115,7 @@ def kullanicilar_list(request):
 
 
 
+@require_GET
 def dashboard_summary(_request):
     result = get_dashboard_summary()
     return JsonResponse(
@@ -118,6 +127,7 @@ def dashboard_summary(_request):
 
 
 
+@require_GET
 def dashboard_bootstrap(_request):
     summary = get_dashboard_summary()
     return JsonResponse(
@@ -130,6 +140,7 @@ def dashboard_bootstrap(_request):
 
 
 
+@require_GET
 def dashboard_bootstrap_full(request):
     limit = _parse_limit(request.GET.get('limit', '10'), default=10)
 

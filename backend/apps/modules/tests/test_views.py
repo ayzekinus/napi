@@ -17,6 +17,12 @@ class ParseLimitTests(SimpleTestCase):
     def test_parse_limit_clamps_to_maximum(self):
         self.assertEqual(_parse_limit('999999', default=10), 500)
 
+    def test_parse_limit_uses_custom_bounds(self):
+        self.assertEqual(_parse_limit('40', default=10, minimum=5, maximum=30), 30)
+
+    def test_parse_limit_respects_custom_in_range_value(self):
+        self.assertEqual(_parse_limit('12', default=10, minimum=5, maximum=30), 12)
+
 
 
 class ModuleInventoryViewTests(SimpleTestCase):
@@ -39,6 +45,12 @@ class ModuleInventoryViewTests(SimpleTestCase):
 class AnakodListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
+
+    def test_anakod_list_post_returns_405(self):
+        request = self.factory.post('/api/modules/anakod')
+        response = anakod_list(request)
+
+        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.list_anakod')
     def test_anakod_list_with_invalid_limit_uses_default(self, list_anakod_mock):
@@ -295,6 +307,12 @@ class DashboardBootstrapViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
+    def test_dashboard_bootstrap_post_returns_405(self):
+        request = self.factory.post('/api/modules/bootstrap')
+        response = dashboard_bootstrap(request)
+
+        self.assertEqual(response.status_code, 405)
+
     @patch('apps.modules.views.get_dashboard_summary')
     def test_dashboard_bootstrap_view_returns_ok(self, summary_mock):
         summary_mock.return_value.data = {'anakod': 1}
@@ -316,6 +334,12 @@ class DashboardBootstrapViewTests(SimpleTestCase):
 class DashboardBootstrapFullViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
+
+    def test_dashboard_bootstrap_full_post_returns_405(self):
+        request = self.factory.post('/api/modules/bootstrap-full')
+        response = dashboard_bootstrap_full(request)
+
+        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.list_kullanicilar')
     @patch('apps.modules.views.list_acma_rapor')
