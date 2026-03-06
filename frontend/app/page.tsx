@@ -8,6 +8,7 @@ import { KullanicilarPreviewTable } from '@/components/kullanicilar-preview-tabl
 import { ModuleStatusList } from '@/components/module-status-list'
 import { SessionStatus } from '@/components/session-status'
 import { DashboardDegradedAlert } from '@/components/dashboard-degraded-alert'
+import { DashboardDegradedDetails } from '@/components/dashboard-degraded-details'
 import {
   getDashboardBootstrapFull,
 } from '@/lib/api'
@@ -25,6 +26,7 @@ export default async function HomePage() {
       </p>
       <SessionStatus />
       <DashboardDegradedAlert degraded={bootstrap.degraded} />
+      <DashboardDegradedDetails degradedMap={bootstrap.degraded_map} />
       <DashboardSummaryCards summary={bootstrap.summary} />
       <ModuleStatusList items={bootstrap.modules} />
       <AnakodPreviewTable items={bootstrap.data.anakod} />

@@ -63,7 +63,18 @@ export type DashboardBootstrapResponse = {
   degraded: boolean
 }
 
+export type DashboardDegradedMap = {
+  summary: boolean
+  anakod: boolean
+  buluntu: boolean
+  demirbas: boolean
+  evrak: boolean
+  acma_rapor: boolean
+  kullanicilar: boolean
+}
+
 export type DashboardBootstrapFullResponse = DashboardBootstrapResponse & {
+  degraded_map: DashboardDegradedMap
   data: {
     anakod: AnakodItem[]
     buluntu: BuluntuItem[]
@@ -179,6 +190,16 @@ export async function getDashboardBootstrapFull(limit = 10): Promise<DashboardBo
     kullanicilar: 0,
   }
 
+  const fallbackDegradedMap: DashboardDegradedMap = {
+    summary: true,
+    anakod: true,
+    buluntu: true,
+    demirbas: true,
+    evrak: true,
+    acma_rapor: true,
+    kullanicilar: true,
+  }
+
   const fallbackData = {
     anakod: [] as AnakodItem[],
     buluntu: [] as BuluntuItem[],
@@ -192,6 +213,7 @@ export async function getDashboardBootstrapFull(limit = 10): Promise<DashboardBo
     modules?: ModuleInventoryItem[]
     summary?: DashboardSummary
     degraded?: boolean
+    degraded_map?: DashboardDegradedMap
     data?: DashboardBootstrapFullResponse['data']
   }>(`/modules/bootstrap-full?limit=${limit}`)
 
@@ -199,6 +221,7 @@ export async function getDashboardBootstrapFull(limit = 10): Promise<DashboardBo
     modules: data?.modules ?? [],
     summary: data?.summary ?? fallbackSummary,
     degraded: data?.degraded ?? true,
+    degraded_map: data?.degraded_map ?? fallbackDegradedMap,
     data: data?.data ?? fallbackData,
   }
 }

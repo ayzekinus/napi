@@ -139,23 +139,24 @@ def dashboard_bootstrap_full(request):
     acma_rapor = list_acma_rapor(limit=limit)
     kullanicilar = list_kullanicilar(limit=limit)
 
-    degraded = any(
-        [
-            summary.degraded,
-            anakod.degraded,
-            buluntu.degraded,
-            demirbas.degraded,
-            evrak.degraded,
-            acma_rapor.degraded,
-            kullanicilar.degraded,
-        ]
-    )
+    degraded_map = {
+        'summary': summary.degraded,
+        'anakod': anakod.degraded,
+        'buluntu': buluntu.degraded,
+        'demirbas': demirbas.degraded,
+        'evrak': evrak.degraded,
+        'acma_rapor': acma_rapor.degraded,
+        'kullanicilar': kullanicilar.degraded,
+    }
+
+    degraded = any(degraded_map.values())
 
     return JsonResponse(
         {
             'modules': LEGACY_MODULES,
             'summary': summary.data,
             'degraded': degraded,
+            'degraded_map': degraded_map,
             'data': {
                 'anakod': anakod.items,
                 'buluntu': buluntu.items,

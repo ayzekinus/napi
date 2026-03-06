@@ -171,5 +171,6 @@ class DashboardBootstrapFullViewTests(SimpleTestCase):
         response = dashboard_bootstrap_full(request)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIn('degraded_map', response.content.decode('utf-8'))
         anakod_mock.assert_called_once_with(limit=7)
         user_mock.assert_called_once_with(limit=7)
