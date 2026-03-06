@@ -240,7 +240,11 @@ class AuthLogoutViewTests(SimpleTestCase):
         request = self.factory.get('/api/auth/logout')
         request.session = {}
         response = auth_logout(request)
+
         self.assertEqual(response.status_code, 405)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['success'], False)
+        self.assertEqual(payload['reason'], 'method_not_allowed')
 
     def test_logout_flushes_session(self):
         request = self.factory.post('/api/auth/logout')
@@ -256,4 +260,6 @@ class AuthLogoutViewTests(SimpleTestCase):
         response = auth_logout(request)
 
         self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['success'], True)
         self.assertTrue(request.session.flushed)
