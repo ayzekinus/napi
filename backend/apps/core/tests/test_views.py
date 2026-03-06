@@ -78,6 +78,15 @@ class HealthViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
+    def test_health_get_returns_ok(self):
+        request = self.factory.get('/api/health')
+        response = health(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['ok'], True)
+        self.assertEqual(payload['service'], 'django-backend')
+
     def test_health_post_returns_405(self):
         request = self.factory.post('/api/health')
         response = health(request)
