@@ -6,8 +6,41 @@ from django.views.decorators.csrf import csrf_exempt
 from .services import parse_legacy_permissions, verify_legacy_credentials
 
 
+_SUPERVISOR_PERMISSIONS = {
+    'anakod_list': True,
+    'anakod_write': True,
+    'buluntu_list': True,
+    'buluntu_write': True,
+    'acma_rapor_list': True,
+    'acma_rapor_write': True,
+    'evrak_list': True,
+    'evrak_write': True,
+    'demirbas_list': True,
+    'demirbas_write': True,
+    'kullanicilar_list': True,
+    'kullanicilar_write': True,
+}
+
+
 def health(_request):
     return JsonResponse({'ok': True, 'service': 'django-backend'})
+
+
+def _session_user(request):
+    return {
+        'ID': request.session.get('ID'),
+        'kullanici': request.session.get('kullanici'),
+        'adsoyad': request.session.get('adsoyad'),
+        'yetki': request.session.get('yetki'),
+        'kisitlamalar': request.session.get('kisitlamalar'),
+    }
+
+
+def _session_permissions(request):
+    if request.session.get('yetki') == 'S':
+        return _SUPERVISOR_PERMISSIONS, True
+
+    return parse_legacy_permissions(request.session.get('kisitlamalar')), False
 
 
 @csrf_exempt
@@ -42,51 +75,33 @@ def auth_session(request):
     if not request.session.get('oturum'):
         return JsonResponse({'authenticated': False}, status=401)
 
-    return JsonResponse(
-        {
-            'authenticated': True,
-            'user': {
-                'ID': request.session.get('ID'),
-                'kullanici': request.session.get('kullanici'),
-                'adsoyad': request.session.get('adsoyad'),
-                'yetki': request.session.get('yetki'),
-                'kisitlamalar': request.session.get('kisitlamalar'),
-            },
-        }
-    )
+    return JsonResponse({'authenticated': True, 'user': _session_user(request)})
 
 
 def auth_permissions(request):
     if not request.session.get('oturum'):
         return JsonResponse({'authenticated': False}, status=401)
 
-    if request.session.get('yetki') == 'S':
-        return JsonResponse(
-            {
-                'authenticated': True,
-                'is_supervisor': True,
-                'permissions': {
-                    'anakod_list': True,
-                    'anakod_write': True,
-                    'buluntu_list': True,
-                    'buluntu_write': True,
-                    'acma_rapor_list': True,
-                    'acma_rapor_write': True,
-                    'evrak_list': True,
-                    'evrak_write': True,
-                    'demirbas_list': True,
-                    'demirbas_write': True,
-                    'kullanicilar_list': True,
-                    'kullanicilar_write': True,
-                },
-            }
-        )
-
-    permissions = parse_legacy_permissions(request.session.get('kisitlamalar'))
+    permissions, is_supervisor = _session_permissions(request)
     return JsonResponse(
         {
             'authenticated': True,
-            'is_supervisor': False,
+            'is_supervisor': is_supervisor,
+            'permissions': permissions,
+        }
+    )
+
+
+def auth_bootstrap(request):
+    if not request.session.get('oturum'):
+        return JsonResponse({'authenticated': False}, status=401)
+
+    permissions, is_supervisor = _session_permissions(request)
+    return JsonResponse(
+        {
+            'authenticated': True,
+            'user': _session_user(request),
+            'is_supervisor': is_supervisor,
             'permissions': permissions,
         }
     )

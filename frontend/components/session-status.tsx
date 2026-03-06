@@ -22,33 +22,26 @@ export function SessionStatus() {
     setLoading(true)
 
     try {
-      const sessionResponse = await fetch(`${API_BASE}/auth/session`, {
+      const response = await fetch(`${API_BASE}/auth/bootstrap`, {
         credentials: 'include',
         cache: 'no-store',
       })
 
-      if (!sessionResponse.ok) {
+      if (!response.ok) {
         setUser(null)
         setPermissions(null)
         setLoading(false)
         return
       }
 
-      const sessionData = (await sessionResponse.json()) as { authenticated?: boolean; user?: SessionUser }
-      const currentUser = sessionData.authenticated ? (sessionData.user ?? null) : null
-      setUser(currentUser)
-
-      const permissionResponse = await fetch(`${API_BASE}/auth/permissions`, {
-        credentials: 'include',
-        cache: 'no-store',
-      })
-
-      if (permissionResponse.ok) {
-        const permissionData = (await permissionResponse.json()) as { permissions?: PermissionMap }
-        setPermissions(permissionData.permissions ?? null)
-      } else {
-        setPermissions(null)
+      const data = (await response.json()) as {
+        authenticated?: boolean
+        user?: SessionUser
+        permissions?: PermissionMap
       }
+
+      setUser(data.authenticated ? (data.user ?? null) : null)
+      setPermissions(data.permissions ?? null)
     } catch {
       setUser(null)
       setPermissions(null)
