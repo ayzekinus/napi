@@ -40,6 +40,29 @@ class AnakodListViewTests(SimpleTestCase):
         list_anakod_mock.assert_called_once_with(limit=50)
 
 
+
+    @patch('apps.modules.views.list_anakod')
+    def test_anakod_list_clamps_limit_to_minimum(self, list_anakod_mock):
+        list_anakod_mock.return_value.items = []
+        list_anakod_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/anakod?limit=0')
+        response = anakod_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_anakod_mock.assert_called_once_with(limit=1)
+
+    @patch('apps.modules.views.list_anakod')
+    def test_anakod_list_clamps_limit_to_maximum(self, list_anakod_mock):
+        list_anakod_mock.return_value.items = []
+        list_anakod_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/anakod?limit=999999')
+        response = anakod_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_anakod_mock.assert_called_once_with(limit=500)
+
 class BuluntuListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()

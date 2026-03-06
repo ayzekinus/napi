@@ -43,6 +43,42 @@ class ListAnakodServiceTests(SimpleTestCase):
         self.assertTrue(result.degraded)
         self.assertEqual(result.items, [])
 
+    @patch('apps.modules.services.connection')
+    def test_list_anakod_clamps_limit_to_maximum(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = []
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        list_anakod(limit=999999)
+
+        cursor_mock.execute.assert_called_once()
+        _, params = cursor_mock.execute.call_args[0]
+        self.assertEqual(params, [500])
+
+    @patch('apps.modules.services.connection')
+    def test_list_anakod_clamps_limit_to_minimum(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = []
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        list_anakod(limit=0)
+
+        cursor_mock.execute.assert_called_once()
+        _, params = cursor_mock.execute.call_args[0]
+        self.assertEqual(params, [1])
+
+    @patch('apps.modules.services.connection')
+    def test_list_anakod_uses_default_limit_for_non_integer(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = []
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        list_anakod(limit='abc')
+
+        cursor_mock.execute.assert_called_once()
+        _, params = cursor_mock.execute.call_args[0]
+        self.assertEqual(params, [50])
+
 
 class ListBuluntuServiceTests(SimpleTestCase):
     @patch('apps.modules.services.connection')
