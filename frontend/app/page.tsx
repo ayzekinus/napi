@@ -9,26 +9,11 @@ import { ModuleStatusList } from '@/components/module-status-list'
 import { SessionStatus } from '@/components/session-status'
 import { DashboardDegradedAlert } from '@/components/dashboard-degraded-alert'
 import {
-  getAcmaRaporList,
-  getAnakodList,
-  getBuluntuList,
-  getDashboardBootstrap,
-  getDemirbasList,
-  getEvrakList,
-  getKullanicilarList,
+  getDashboardBootstrapFull,
 } from '@/lib/api'
 
 export default async function HomePage() {
-  const [bootstrap, anakodItems, buluntuItems, demirbasItems, evrakItems, acmaRaporItems, kullaniciItems] =
-    await Promise.all([
-      getDashboardBootstrap(),
-      getAnakodList(10),
-      getBuluntuList(10),
-      getDemirbasList(10),
-      getEvrakList(10),
-      getAcmaRaporList(10),
-      getKullanicilarList(10),
-    ])
+  const bootstrap = await getDashboardBootstrapFull(10)
 
   return (
     <main style={{ fontFamily: 'sans-serif', padding: 24 }}>
@@ -42,12 +27,12 @@ export default async function HomePage() {
       <DashboardDegradedAlert degraded={bootstrap.degraded} />
       <DashboardSummaryCards summary={bootstrap.summary} />
       <ModuleStatusList items={bootstrap.modules} />
-      <AnakodPreviewTable items={anakodItems} />
-      <BuluntuPreviewTable items={buluntuItems} />
-      <DemirbasPreviewTable items={demirbasItems} />
-      <EvrakPreviewTable items={evrakItems} />
-      <AcmaRaporPreviewTable items={acmaRaporItems} />
-      <KullanicilarPreviewTable items={kullaniciItems} />
+      <AnakodPreviewTable items={bootstrap.data.anakod} />
+      <BuluntuPreviewTable items={bootstrap.data.buluntu} />
+      <DemirbasPreviewTable items={bootstrap.data.demirbas} />
+      <EvrakPreviewTable items={bootstrap.data.evrak} />
+      <AcmaRaporPreviewTable items={bootstrap.data.acma_rapor} />
+      <KullanicilarPreviewTable items={bootstrap.data.kullanicilar} />
     </main>
   )
 }

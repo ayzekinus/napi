@@ -63,6 +63,17 @@ export type DashboardBootstrapResponse = {
   degraded: boolean
 }
 
+export type DashboardBootstrapFullResponse = DashboardBootstrapResponse & {
+  data: {
+    anakod: AnakodItem[]
+    buluntu: BuluntuItem[]
+    demirbas: DemirbasItem[]
+    evrak: EvrakItem[]
+    acma_rapor: AcmaRaporItem[]
+    kullanicilar: KullaniciItem[]
+  }
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api'
 
 async function safeFetchJson<T>(path: string): Promise<T | null> {
@@ -154,5 +165,40 @@ export async function getDashboardBootstrap(): Promise<DashboardBootstrapRespons
     modules: data?.modules ?? [],
     summary: data?.summary ?? fallbackSummary,
     degraded: data?.degraded ?? true,
+  }
+}
+
+
+export async function getDashboardBootstrapFull(limit = 10): Promise<DashboardBootstrapFullResponse> {
+  const fallbackSummary: DashboardSummary = {
+    anakod: 0,
+    buluntu: 0,
+    acma_rapor: 0,
+    evrak: 0,
+    demirbas: 0,
+    kullanicilar: 0,
+  }
+
+  const fallbackData = {
+    anakod: [] as AnakodItem[],
+    buluntu: [] as BuluntuItem[],
+    demirbas: [] as DemirbasItem[],
+    evrak: [] as EvrakItem[],
+    acma_rapor: [] as AcmaRaporItem[],
+    kullanicilar: [] as KullaniciItem[],
+  }
+
+  const data = await safeFetchJson<{
+    modules?: ModuleInventoryItem[]
+    summary?: DashboardSummary
+    degraded?: boolean
+    data?: DashboardBootstrapFullResponse['data']
+  }>(`/modules/bootstrap-full?limit=${limit}`)
+
+  return {
+    modules: data?.modules ?? [],
+    summary: data?.summary ?? fallbackSummary,
+    degraded: data?.degraded ?? true,
+    data: data?.data ?? fallbackData,
   }
 }

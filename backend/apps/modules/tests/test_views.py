@@ -3,7 +3,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, dashboard_bootstrap, dashboard_summary, demirbas_list, evrak_list, kullanicilar_list
+from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, dashboard_bootstrap, dashboard_bootstrap_full, dashboard_summary, demirbas_list, evrak_list, kullanicilar_list
 
 
 class AnakodListViewTests(SimpleTestCase):
@@ -136,3 +136,40 @@ class DashboardBootstrapViewTests(SimpleTestCase):
 
         self.assertEqual(response.status_code, 200)
         summary_mock.assert_called_once_with()
+
+
+
+class DashboardBootstrapFullViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    @patch('apps.modules.views.list_kullanicilar')
+    @patch('apps.modules.views.list_acma_rapor')
+    @patch('apps.modules.views.list_evrak')
+    @patch('apps.modules.views.list_demirbas')
+    @patch('apps.modules.views.list_buluntu')
+    @patch('apps.modules.views.list_anakod')
+    @patch('apps.modules.views.get_dashboard_summary')
+    def test_dashboard_bootstrap_full_returns_ok(
+        self,
+        summary_mock,
+        anakod_mock,
+        buluntu_mock,
+        demirbas_mock,
+        evrak_mock,
+        acma_mock,
+        user_mock,
+    ):
+        summary_mock.return_value.data = {'anakod': 1}
+        summary_mock.return_value.degraded = False
+
+        for m in [anakod_mock, buluntu_mock, demirbas_mock, evrak_mock, acma_mock, user_mock]:
+            m.return_value.items = []
+            m.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/bootstrap-full?limit=7')
+        response = dashboard_bootstrap_full(request)
+
+        self.assertEqual(response.status_code, 200)
+        anakod_mock.assert_called_once_with(limit=7)
+        user_mock.assert_called_once_with(limit=7)

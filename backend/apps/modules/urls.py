@@ -8,6 +8,7 @@ from .views import (
     demirbas_list,
     dashboard_summary,
     dashboard_bootstrap,
+    dashboard_bootstrap_full,
     module_inventory,
     kullanicilar_list,
 )
@@ -22,4 +23,5 @@ urlpatterns = [
     path('kullanicilar', kullanicilar_list, name='kullanicilar-list'),
     path('dashboard-summary', dashboard_summary, name='dashboard-summary'),
     path('bootstrap', dashboard_bootstrap, name='dashboard-bootstrap'),
+    path('bootstrap-full', dashboard_bootstrap_full, name='dashboard-bootstrap-full'),
 ]

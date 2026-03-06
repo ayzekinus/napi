@@ -125,3 +125,44 @@ def dashboard_bootstrap(_request):
             'degraded': summary.degraded,
         }
     )
+
+
+
+def dashboard_bootstrap_full(request):
+    limit = _parse_limit(request.GET.get('limit', '10'), default=10)
+
+    summary = get_dashboard_summary()
+    anakod = list_anakod(limit=limit)
+    buluntu = list_buluntu(limit=limit)
+    demirbas = list_demirbas(limit=limit)
+    evrak = list_evrak(limit=limit)
+    acma_rapor = list_acma_rapor(limit=limit)
+    kullanicilar = list_kullanicilar(limit=limit)
+
+    degraded = any(
+        [
+            summary.degraded,
+            anakod.degraded,
+            buluntu.degraded,
+            demirbas.degraded,
+            evrak.degraded,
+            acma_rapor.degraded,
+            kullanicilar.degraded,
+        ]
+    )
+
+    return JsonResponse(
+        {
+            'modules': LEGACY_MODULES,
+            'summary': summary.data,
+            'degraded': degraded,
+            'data': {
+                'anakod': anakod.items,
+                'buluntu': buluntu.items,
+                'demirbas': demirbas.items,
+                'evrak': evrak.items,
+                'acma_rapor': acma_rapor.items,
+                'kullanicilar': kullanicilar.items,
+            },
+        }
+    )
