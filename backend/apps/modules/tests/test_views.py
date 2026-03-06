@@ -118,6 +118,29 @@ class EvrakListViewTests(SimpleTestCase):
         list_evrak_mock.assert_called_once_with(limit=50)
 
 
+
+    @patch('apps.modules.views.list_evrak')
+    def test_evrak_list_clamps_limit_to_minimum(self, list_evrak_mock):
+        list_evrak_mock.return_value.items = []
+        list_evrak_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/evrak?limit=0')
+        response = evrak_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_evrak_mock.assert_called_once_with(limit=1)
+
+    @patch('apps.modules.views.list_evrak')
+    def test_evrak_list_clamps_limit_to_maximum(self, list_evrak_mock):
+        list_evrak_mock.return_value.items = []
+        list_evrak_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/evrak?limit=999999')
+        response = evrak_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_evrak_mock.assert_called_once_with(limit=500)
+
 class AcmaRaporListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
