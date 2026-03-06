@@ -224,3 +224,63 @@ class DashboardBootstrapFullViewTests(SimpleTestCase):
         self.assertEqual(payload['degraded'], True)
         self.assertEqual(payload['degraded_map']['summary'], True)
         anakod_mock.assert_called_once_with(limit=10)
+
+    @patch('apps.modules.views.list_kullanicilar')
+    @patch('apps.modules.views.list_acma_rapor')
+    @patch('apps.modules.views.list_evrak')
+    @patch('apps.modules.views.list_demirbas')
+    @patch('apps.modules.views.list_buluntu')
+    @patch('apps.modules.views.list_anakod')
+    @patch('apps.modules.views.get_dashboard_summary')
+    def test_dashboard_bootstrap_full_clamps_limit_to_minimum(
+        self,
+        summary_mock,
+        anakod_mock,
+        buluntu_mock,
+        demirbas_mock,
+        evrak_mock,
+        acma_mock,
+        user_mock,
+    ):
+        summary_mock.return_value.data = {'anakod': 1}
+        summary_mock.return_value.degraded = False
+
+        for m in [anakod_mock, buluntu_mock, demirbas_mock, evrak_mock, acma_mock, user_mock]:
+            m.return_value.items = []
+            m.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/bootstrap-full?limit=0')
+        response = dashboard_bootstrap_full(request)
+
+        self.assertEqual(response.status_code, 200)
+        anakod_mock.assert_called_once_with(limit=1)
+
+    @patch('apps.modules.views.list_kullanicilar')
+    @patch('apps.modules.views.list_acma_rapor')
+    @patch('apps.modules.views.list_evrak')
+    @patch('apps.modules.views.list_demirbas')
+    @patch('apps.modules.views.list_buluntu')
+    @patch('apps.modules.views.list_anakod')
+    @patch('apps.modules.views.get_dashboard_summary')
+    def test_dashboard_bootstrap_full_clamps_limit_to_maximum(
+        self,
+        summary_mock,
+        anakod_mock,
+        buluntu_mock,
+        demirbas_mock,
+        evrak_mock,
+        acma_mock,
+        user_mock,
+    ):
+        summary_mock.return_value.data = {'anakod': 1}
+        summary_mock.return_value.degraded = False
+
+        for m in [anakod_mock, buluntu_mock, demirbas_mock, evrak_mock, acma_mock, user_mock]:
+            m.return_value.items = []
+            m.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/bootstrap-full?limit=999999')
+        response = dashboard_bootstrap_full(request)
+
+        self.assertEqual(response.status_code, 200)
+        anakod_mock.assert_called_once_with(limit=500)

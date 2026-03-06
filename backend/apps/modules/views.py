@@ -13,11 +13,13 @@ LEGACY_MODULES = [
 ]
 
 
-def _parse_limit(raw_limit: str, default: int = 50) -> int:
+def _parse_limit(raw_limit: str, default: int = 50, minimum: int = 1, maximum: int = 500) -> int:
     try:
-        return int(raw_limit)
-    except ValueError:
+        parsed = int(raw_limit)
+    except (TypeError, ValueError):
         return default
+
+    return max(minimum, min(parsed, maximum))
 
 
 def module_inventory(_request):
