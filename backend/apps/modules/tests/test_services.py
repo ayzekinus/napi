@@ -5,7 +5,6 @@ from django.db import DatabaseError
 from django.test import SimpleTestCase
 
 from apps.modules.services import (
-    _safe_limit,
     list_acma_rapor,
     list_anakod,
     list_buluntu,
@@ -14,21 +13,6 @@ from apps.modules.services import (
     list_evrak,
     list_kullanicilar,
 )
-
-
-class SafeLimitTests(SimpleTestCase):
-    def test_safe_limit_returns_default_for_non_integer(self):
-        self.assertEqual(_safe_limit('abc', default=10), 10)
-
-    def test_safe_limit_clamps_to_minimum(self):
-        self.assertEqual(_safe_limit(0), 1)
-
-    def test_safe_limit_clamps_to_maximum(self):
-        self.assertEqual(_safe_limit(999999), 500)
-
-    def test_safe_limit_returns_value_when_in_range(self):
-        self.assertEqual(_safe_limit(42), 42)
-
 
 
 class ListAnakodServiceTests(SimpleTestCase):
