@@ -48,6 +48,32 @@ class AuthLoginViewTests(SimpleTestCase):
         self.assertEqual(response.status_code, 401)
 
 
+    @patch('apps.core.views.verify_legacy_credentials')
+    def test_login_sets_session_on_success(self, verify_mock):
+        verify_mock.return_value.success = True
+        verify_mock.return_value.user = {
+            'ID': 9,
+            'kullanici': 'demo',
+            'adsoyad': 'Demo User',
+            'yetki': 'A',
+            'kisitlamalar': 'A0',
+        }
+
+        request = self.factory.post(
+            '/api/auth/login',
+            data=json.dumps({'username': 'demo', 'password': 'secret'}),
+            content_type='application/json',
+        )
+        request.session = {}
+
+        response = auth_login(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(request.session['oturum'], True)
+        self.assertEqual(request.session['ID'], 9)
+        self.assertEqual(request.session['kullanici'], 'demo')
+
+
 class HealthViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -68,6 +94,30 @@ class AuthSessionViewTests(SimpleTestCase):
         response = auth_session(request)
         self.assertEqual(response.status_code, 405)
 
+    def test_session_requires_authentication(self):
+        request = self.factory.get('/api/auth/session')
+        request.session = {}
+        response = auth_session(request)
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_session_returns_user_when_authenticated(self):
+        request = self.factory.get('/api/auth/session')
+        request.session = {
+            'oturum': True,
+            'ID': 7,
+            'kullanici': 'ali',
+            'adsoyad': 'Ali Veli',
+            'yetki': 'A',
+            'kisitlamalar': 'A0',
+        }
+        response = auth_session(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['authenticated'], True)
+        self.assertEqual(payload['user']['ID'], 7)
+        self.assertEqual(payload['user']['kullanici'], 'ali')
 
 
 class AuthPermissionsViewTests(SimpleTestCase):
