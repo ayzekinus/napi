@@ -2,6 +2,7 @@ import json
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 
 from .services import parse_legacy_permissions, verify_legacy_credentials
 
@@ -22,6 +23,7 @@ _SUPERVISOR_PERMISSIONS = {
 }
 
 
+@require_GET
 def health(_request):
     return JsonResponse({'ok': True, 'service': 'django-backend'})
 
@@ -71,6 +73,7 @@ def auth_login(request):
     return JsonResponse({'success': True, 'user': result.user})
 
 
+@require_GET
 def auth_session(request):
     if not request.session.get('oturum'):
         return JsonResponse({'authenticated': False}, status=401)
@@ -78,6 +81,7 @@ def auth_session(request):
     return JsonResponse({'authenticated': True, 'user': _session_user(request)})
 
 
+@require_GET
 def auth_permissions(request):
     if not request.session.get('oturum'):
         return JsonResponse({'authenticated': False}, status=401)
@@ -92,6 +96,7 @@ def auth_permissions(request):
     )
 
 
+@require_GET
 def auth_bootstrap(request):
     if not request.session.get('oturum'):
         return JsonResponse({'authenticated': False}, status=401)
