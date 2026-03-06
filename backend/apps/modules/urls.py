@@ -6,6 +6,7 @@ from .views import (
     buluntu_list,
     evrak_list,
     demirbas_list,
+    dashboard_summary,
     module_inventory,
     kullanicilar_list,
 )
@@ -18,4 +19,5 @@ urlpatterns = [
     path('acma-rapor', acma_rapor_list, name='acma-rapor-list'),
     path('demirbas', demirbas_list, name='demirbas-list'),
     path('kullanicilar', kullanicilar_list, name='kullanicilar-list'),
+    path('dashboard-summary', dashboard_summary, name='dashboard-summary'),
 ]

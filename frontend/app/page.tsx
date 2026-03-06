@@ -4,6 +4,7 @@ import { BuluntuPreviewTable } from '@/components/buluntu-preview-table'
 import { DemirbasPreviewTable } from '@/components/demirbas-preview-table'
 import { EvrakPreviewTable } from '@/components/evrak-preview-table'
 import { ModuleStatusList } from '@/components/module-status-list'
+import { DashboardSummaryCards } from '@/components/dashboard-summary-cards'
 import { SessionStatus } from '@/components/session-status'
 import { KullanicilarPreviewTable } from '@/components/kullanicilar-preview-table'
 import {
@@ -12,13 +13,15 @@ import {
   getBuluntuList,
   getDemirbasList,
   getEvrakList,
+  getDashboardSummary,
   getModuleInventory,
   getKullanicilarList,
 } from '@/lib/api'
 
 export default async function HomePage() {
-  const [modules, anakodItems, buluntuItems, demirbasItems, evrakItems, acmaRaporItems, kullaniciItems] = await Promise.all([
+  const [modules, summary, anakodItems, buluntuItems, demirbasItems, evrakItems, acmaRaporItems, kullaniciItems] = await Promise.all([
     getModuleInventory(),
+    getDashboardSummary(),
     getAnakodList(10),
     getBuluntuList(10),
     getDemirbasList(10),
@@ -34,6 +37,7 @@ export default async function HomePage() {
 
       <p><a href="/login">Legacy uyumlu giriş ekranı</a></p>
       <SessionStatus />
+      <DashboardSummaryCards summary={summary} />
       <ModuleStatusList items={modules} />
       <AnakodPreviewTable items={anakodItems} />
       <BuluntuPreviewTable items={buluntuItems} />

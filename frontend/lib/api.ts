@@ -43,6 +43,15 @@ export type AcmaRaporItem = {
   sezon: string
 }
 
+export type DashboardSummary = {
+  anakod: number
+  buluntu: number
+  acma_rapor: number
+  evrak: number
+  demirbas: number
+  kullanicilar: number
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api'
 
 export async function getModuleInventory(): Promise<ModuleInventoryItem[]> {
@@ -135,4 +144,32 @@ export async function getKullanicilarList(limit = 10): Promise<KullaniciItem[]> 
 
   const data = (await response.json()) as { items?: KullaniciItem[] }
   return data.items ?? []
+}
+
+
+export async function getDashboardSummary(): Promise<DashboardSummary> {
+  const response = await fetch(`${API_BASE}/modules/dashboard-summary`, {
+    cache: 'no-store',
+  })
+
+  if (!response.ok) {
+    return {
+      anakod: 0,
+      buluntu: 0,
+      acma_rapor: 0,
+      evrak: 0,
+      demirbas: 0,
+      kullanicilar: 0,
+    }
+  }
+
+  const data = (await response.json()) as { summary?: DashboardSummary }
+  return data.summary ?? {
+    anakod: 0,
+    buluntu: 0,
+    acma_rapor: 0,
+    evrak: 0,
+    demirbas: 0,
+    kullanicilar: 0,
+  }
 }

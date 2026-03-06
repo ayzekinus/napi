@@ -8,6 +8,7 @@ from apps.modules.services import (
     list_acma_rapor,
     list_anakod,
     list_buluntu,
+    get_dashboard_summary,
     list_demirbas,
     list_evrak,
     list_kullanicilar,
@@ -250,3 +251,37 @@ class ListKullanicilarServiceTests(SimpleTestCase):
 
         self.assertTrue(result.degraded)
         self.assertEqual(result.items, [])
+
+
+
+class DashboardSummaryServiceTests(SimpleTestCase):
+    @patch('apps.modules.services.connection')
+    def test_dashboard_summary_returns_counts(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchone.return_value = (3, 12, 4, 7, 2, 9)
+
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        result = get_dashboard_summary()
+
+        self.assertFalse(result.degraded)
+        self.assertEqual(
+            result.data,
+            {
+                'anakod': 3,
+                'buluntu': 12,
+                'acma_rapor': 4,
+                'evrak': 7,
+                'demirbas': 2,
+                'kullanicilar': 9,
+            },
+        )
+
+    @patch('apps.modules.services.connection')
+    def test_dashboard_summary_handles_db_error(self, connection_mock):
+        connection_mock.cursor.side_effect = DatabaseError('db error')
+
+        result = get_dashboard_summary()
+
+        self.assertTrue(result.degraded)
+        self.assertEqual(result.data['anakod'], 0)

@@ -12,6 +12,12 @@ class QueryResult:
     degraded: bool = False
 
 
+@dataclass
+class SummaryResult:
+    data: dict[str, int]
+    degraded: bool = False
+
+
 def _safe_limit(limit: int, default: int = 50) -> int:
     if not isinstance(limit, int):
         return default
@@ -190,3 +196,45 @@ def list_kullanicilar(limit: int = 50) -> QueryResult:
         for row in rows
     ]
     return QueryResult(items=items, degraded=False)
+
+
+
+def get_dashboard_summary() -> SummaryResult:
+    query = """
+        SELECT
+            (SELECT COUNT(*) FROM anakod) AS anakod,
+            (SELECT COUNT(*) FROM buluntu_karti) AS buluntu,
+            (SELECT COUNT(*) FROM acma_rapor) AS acma_rapor,
+            (SELECT COUNT(*) FROM evrak_yonetimi) AS evrak,
+            (SELECT COUNT(*) FROM demirbas_listesi) AS demirbas,
+            (SELECT COUNT(*) FROM _kullanici) AS kullanicilar
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            row = cursor.fetchone()
+    except DatabaseError:
+        return SummaryResult(
+            data={
+                'anakod': 0,
+                'buluntu': 0,
+                'acma_rapor': 0,
+                'evrak': 0,
+                'demirbas': 0,
+                'kullanicilar': 0,
+            },
+            degraded=True,
+        )
+
+    return SummaryResult(
+        data={
+            'anakod': int(row[0]),
+            'buluntu': int(row[1]),
+            'acma_rapor': int(row[2]),
+            'evrak': int(row[3]),
+            'demirbas': int(row[4]),
+            'kullanicilar': int(row[5]),
+        },
+        degraded=False,
+    )

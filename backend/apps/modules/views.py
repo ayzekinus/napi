@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from .services import list_acma_rapor, list_anakod, list_buluntu, list_demirbas, list_evrak, list_kullanicilar
+from .services import get_dashboard_summary, list_acma_rapor, list_anakod, list_buluntu, list_demirbas, list_evrak, list_kullanicilar
 
 
 LEGACY_MODULES = [
@@ -99,6 +99,17 @@ def kullanicilar_list(request):
         {
             'items': result.items,
             'count': len(result.items),
+            'degraded': result.degraded,
+        }
+    )
+
+
+
+def dashboard_summary(_request):
+    result = get_dashboard_summary()
+    return JsonResponse(
+        {
+            'summary': result.data,
             'degraded': result.degraded,
         }
     )
