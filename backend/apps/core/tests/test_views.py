@@ -247,7 +247,16 @@ class AuthBootstrapViewTests(SimpleTestCase):
         payload = json.loads(response.content.decode('utf-8'))
         self.assertEqual(payload['authenticated'], True)
         self.assertEqual(payload['is_supervisor'], False)
-        self.assertEqual(payload['user']['ID'], 5)
+        self.assertEqual(
+            payload['user'],
+            {
+                'ID': 5,
+                'kullanici': 'demo',
+                'adsoyad': 'Demo User',
+                'yetki': 'A',
+                'kisitlamalar': 'A0',
+            },
+        )
         self.assertEqual(payload['permissions']['anakod_list'], True)
         parser_mock.assert_called_once_with('A0')
 
