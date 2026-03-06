@@ -147,6 +147,19 @@ class AuthPermissionsViewTests(SimpleTestCase):
         parser_mock.assert_called_once_with('A0')
 
 
+    @patch('apps.core.views.parse_legacy_permissions')
+    def test_permissions_returns_supervisor_map_without_parser(self, parser_mock):
+        request = self.factory.get('/api/auth/permissions')
+        request.session = {'oturum': True, 'yetki': 'S', 'kisitlamalar': 'IGNORED'}
+        response = auth_permissions(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['is_supervisor'], True)
+        self.assertEqual(payload['permissions']['anakod_write'], True)
+        parser_mock.assert_not_called()
+
+
 class AuthBootstrapViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -179,6 +192,26 @@ class AuthBootstrapViewTests(SimpleTestCase):
 
         self.assertEqual(response.status_code, 200)
         parser_mock.assert_called_once_with('A0')
+
+
+    @patch('apps.core.views.parse_legacy_permissions')
+    def test_bootstrap_supervisor_bypasses_parser(self, parser_mock):
+        request = self.factory.get('/api/auth/bootstrap')
+        request.session = {
+            'oturum': True,
+            'ID': 1,
+            'kullanici': 'root',
+            'adsoyad': 'Supervisor',
+            'yetki': 'S',
+            'kisitlamalar': '',
+        }
+        response = auth_bootstrap(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['is_supervisor'], True)
+        self.assertEqual(payload['permissions']['kullanicilar_write'], True)
+        parser_mock.assert_not_called()
 
 
 class AuthLogoutViewTests(SimpleTestCase):
