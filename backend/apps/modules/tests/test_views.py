@@ -4,7 +4,19 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, dashboard_bootstrap, dashboard_bootstrap_full, dashboard_summary, demirbas_list, evrak_list, kullanicilar_list, module_inventory
+from apps.modules.views import _parse_limit, acma_rapor_list, anakod_list, buluntu_list, dashboard_bootstrap, dashboard_bootstrap_full, dashboard_summary, demirbas_list, evrak_list, kullanicilar_list, module_inventory
+
+
+class ParseLimitTests(SimpleTestCase):
+    def test_parse_limit_returns_default_for_none(self):
+        self.assertEqual(_parse_limit(None, default=10), 10)
+
+    def test_parse_limit_clamps_to_minimum(self):
+        self.assertEqual(_parse_limit('0', default=10), 1)
+
+    def test_parse_limit_clamps_to_maximum(self):
+        self.assertEqual(_parse_limit('999999', default=10), 500)
+
 
 
 class ModuleInventoryViewTests(SimpleTestCase):
