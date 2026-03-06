@@ -153,6 +153,10 @@ class AuthPermissionsViewTests(SimpleTestCase):
         response = auth_permissions(request)
 
         self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['authenticated'], True)
+        self.assertEqual(payload['is_supervisor'], False)
+        self.assertEqual(payload['permissions']['anakod_list'], True)
         parser_mock.assert_called_once_with('A0')
 
 
@@ -200,6 +204,11 @@ class AuthBootstrapViewTests(SimpleTestCase):
         response = auth_bootstrap(request)
 
         self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['authenticated'], True)
+        self.assertEqual(payload['is_supervisor'], False)
+        self.assertEqual(payload['user']['ID'], 5)
+        self.assertEqual(payload['permissions']['anakod_list'], True)
         parser_mock.assert_called_once_with('A0')
 
 
