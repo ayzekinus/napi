@@ -4,8 +4,8 @@ import hashlib
 from dataclasses import dataclass
 from typing import Any
 
-from django.db import DatabaseError, connection
 from django.conf import settings
+from django.db import DatabaseError, connection
 
 
 @dataclass
@@ -18,6 +18,24 @@ class AuthResult:
 def _legacy_password_hash(password: str) -> str:
     salted = f"{settings.LEGACY_HASH_SALT}{password}"
     return hashlib.md5(salted.encode('utf-8')).hexdigest()
+
+
+def parse_legacy_permissions(raw_permissions: str | None) -> dict[str, bool]:
+    tokens = {x.strip() for x in (raw_permissions or '').split(',') if x.strip()}
+    return {
+        'anakod_list': 'A0' in tokens,
+        'anakod_write': 'A1' in tokens or 'A2' in tokens,
+        'buluntu_list': 'B0' in tokens,
+        'buluntu_write': 'B1' in tokens or 'B2' in tokens,
+        'acma_rapor_list': 'AR0' in tokens,
+        'acma_rapor_write': 'AR1' in tokens or 'AR2' in tokens,
+        'evrak_list': 'EY0' in tokens,
+        'evrak_write': 'EY1' in tokens or 'EY2' in tokens,
+        'demirbas_list': 'DL0' in tokens,
+        'demirbas_write': 'DL1' in tokens or 'DL2' in tokens,
+        'kullanicilar_list': 'R0' in tokens,
+        'kullanicilar_write': 'R1' in tokens or 'R2' in tokens,
+    }
 
 
 def verify_legacy_credentials(username: str, password: str) -> AuthResult:

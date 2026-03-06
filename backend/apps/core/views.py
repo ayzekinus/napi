@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .services import verify_legacy_credentials
+from .services import parse_legacy_permissions, verify_legacy_credentials
 
 
 def health(_request):
@@ -52,6 +52,42 @@ def auth_session(request):
                 'yetki': request.session.get('yetki'),
                 'kisitlamalar': request.session.get('kisitlamalar'),
             },
+        }
+    )
+
+
+def auth_permissions(request):
+    if not request.session.get('oturum'):
+        return JsonResponse({'authenticated': False}, status=401)
+
+    if request.session.get('yetki') == 'S':
+        return JsonResponse(
+            {
+                'authenticated': True,
+                'is_supervisor': True,
+                'permissions': {
+                    'anakod_list': True,
+                    'anakod_write': True,
+                    'buluntu_list': True,
+                    'buluntu_write': True,
+                    'acma_rapor_list': True,
+                    'acma_rapor_write': True,
+                    'evrak_list': True,
+                    'evrak_write': True,
+                    'demirbas_list': True,
+                    'demirbas_write': True,
+                    'kullanicilar_list': True,
+                    'kullanicilar_write': True,
+                },
+            }
+        )
+
+    permissions = parse_legacy_permissions(request.session.get('kisitlamalar'))
+    return JsonResponse(
+        {
+            'authenticated': True,
+            'is_supervisor': False,
+            'permissions': permissions,
         }
     )
 

@@ -2,13 +2,27 @@ from unittest.mock import Mock, patch
 
 from django.test import SimpleTestCase, override_settings
 
-from apps.core.services import _legacy_password_hash, verify_legacy_credentials
+from apps.core.services import (
+    _legacy_password_hash,
+    parse_legacy_permissions,
+    verify_legacy_credentials,
+)
 
 
 class LegacyHashTests(SimpleTestCase):
     @override_settings(LEGACY_HASH_SALT='abc-')
     def test_legacy_hash_is_stable(self):
         self.assertEqual(_legacy_password_hash('1234'), '5811c29643220230d3c4ed9c5c5baa2e')
+
+
+class LegacyPermissionParserTests(SimpleTestCase):
+    def test_permission_parser_maps_tokens(self):
+        permissions = parse_legacy_permissions('A0,B1,EY0,R2')
+        self.assertTrue(permissions['anakod_list'])
+        self.assertTrue(permissions['buluntu_write'])
+        self.assertTrue(permissions['evrak_list'])
+        self.assertTrue(permissions['kullanicilar_write'])
+        self.assertFalse(permissions['demirbas_list'])
 
 
 class VerifyCredentialsTests(SimpleTestCase):

@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.core.views import auth_login, auth_logout
+from apps.core.views import auth_login, auth_logout, auth_permissions
 
 
 class AuthLoginViewTests(SimpleTestCase):
@@ -25,6 +25,27 @@ class AuthLoginViewTests(SimpleTestCase):
 
         response = auth_login(request)
         self.assertEqual(response.status_code, 401)
+
+
+class AuthPermissionsViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_permissions_requires_session(self):
+        request = self.factory.get('/api/auth/permissions')
+        request.session = {}
+        response = auth_permissions(request)
+        self.assertEqual(response.status_code, 401)
+
+    @patch('apps.core.views.parse_legacy_permissions')
+    def test_permissions_uses_parser_for_non_supervisor(self, parser_mock):
+        parser_mock.return_value = {'anakod_list': True}
+        request = self.factory.get('/api/auth/permissions')
+        request.session = {'oturum': True, 'yetki': 'A', 'kisitlamalar': 'A0'}
+        response = auth_permissions(request)
+
+        self.assertEqual(response.status_code, 200)
+        parser_mock.assert_called_once_with('A0')
 
 
 class AuthLogoutViewTests(SimpleTestCase):
