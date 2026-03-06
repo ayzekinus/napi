@@ -33,6 +33,9 @@ class AuthLoginViewTests(SimpleTestCase):
         response = auth_login(request)
 
         self.assertEqual(response.status_code, 401)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['success'], False)
+        self.assertEqual(payload['reason'], 'invalid_credentials')
         verify_mock.assert_called_once_with(username='', password='')
 
 
