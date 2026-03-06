@@ -17,6 +17,9 @@ class AuthLoginViewTests(SimpleTestCase):
         response = auth_login(request)
 
         self.assertEqual(response.status_code, 405)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['success'], False)
+        self.assertEqual(payload['reason'], 'method_not_allowed')
 
 
     @patch('apps.core.views.verify_legacy_credentials')
@@ -64,6 +67,9 @@ class AuthLoginViewTests(SimpleTestCase):
 
         response = auth_login(request)
         self.assertEqual(response.status_code, 401)
+        payload = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(payload['success'], False)
+        self.assertEqual(payload['reason'], 'invalid_password')
 
 
     @patch('apps.core.views.verify_legacy_credentials')
