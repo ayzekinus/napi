@@ -52,6 +52,11 @@ export type DashboardSummary = {
   kullanicilar: number
 }
 
+export type DashboardSummaryResponse = {
+  summary: DashboardSummary
+  degraded: boolean
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api'
 
 async function safeFetchJson<T>(path: string): Promise<T | null> {
@@ -105,16 +110,19 @@ export async function getKullanicilarList(limit = 10): Promise<KullaniciItem[]> 
   return data?.items ?? []
 }
 
-export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const data = await safeFetchJson<{ summary?: DashboardSummary }>('/modules/dashboard-summary')
-  return (
-    data?.summary ?? {
-      anakod: 0,
-      buluntu: 0,
-      acma_rapor: 0,
-      evrak: 0,
-      demirbas: 0,
-      kullanicilar: 0,
-    }
-  )
+export async function getDashboardSummary(): Promise<DashboardSummaryResponse> {
+  const fallbackSummary: DashboardSummary = {
+    anakod: 0,
+    buluntu: 0,
+    acma_rapor: 0,
+    evrak: 0,
+    demirbas: 0,
+    kullanicilar: 0,
+  }
+
+  const data = await safeFetchJson<{ summary?: DashboardSummary; degraded?: boolean }>('/modules/dashboard-summary')
+  return {
+    summary: data?.summary ?? fallbackSummary,
+    degraded: data?.degraded ?? true,
+  }
 }
