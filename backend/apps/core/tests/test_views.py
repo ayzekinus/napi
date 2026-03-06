@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.core.views import auth_bootstrap, auth_login, auth_logout, auth_permissions
+from apps.core.views import auth_bootstrap, auth_login, auth_logout, auth_permissions, auth_session, health
 
 
 class AuthLoginViewTests(SimpleTestCase):
@@ -27,9 +27,37 @@ class AuthLoginViewTests(SimpleTestCase):
         self.assertEqual(response.status_code, 401)
 
 
+class HealthViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_health_post_returns_405(self):
+        request = self.factory.post('/api/health')
+        response = health(request)
+        self.assertEqual(response.status_code, 405)
+
+
+class AuthSessionViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_session_post_returns_405(self):
+        request = self.factory.post('/api/auth/session')
+        request.session = {}
+        response = auth_session(request)
+        self.assertEqual(response.status_code, 405)
+
+
+
 class AuthPermissionsViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
+
+    def test_permissions_post_returns_405(self):
+        request = self.factory.post('/api/auth/permissions')
+        request.session = {}
+        response = auth_permissions(request)
+        self.assertEqual(response.status_code, 405)
 
     def test_permissions_requires_session(self):
         request = self.factory.get('/api/auth/permissions')
@@ -51,6 +79,12 @@ class AuthPermissionsViewTests(SimpleTestCase):
 class AuthBootstrapViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
+
+    def test_bootstrap_post_returns_405(self):
+        request = self.factory.post('/api/auth/bootstrap')
+        request.session = {}
+        response = auth_bootstrap(request)
+        self.assertEqual(response.status_code, 405)
 
     def test_bootstrap_requires_session(self):
         request = self.factory.get('/api/auth/bootstrap')
