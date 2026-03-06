@@ -198,6 +198,29 @@ class DemirbasListViewTests(SimpleTestCase):
 
 
 
+
+    @patch('apps.modules.views.list_demirbas')
+    def test_demirbas_list_clamps_limit_to_minimum(self, list_demirbas_mock):
+        list_demirbas_mock.return_value.items = []
+        list_demirbas_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/demirbas?limit=0')
+        response = demirbas_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_demirbas_mock.assert_called_once_with(limit=1)
+
+    @patch('apps.modules.views.list_demirbas')
+    def test_demirbas_list_clamps_limit_to_maximum(self, list_demirbas_mock):
+        list_demirbas_mock.return_value.items = []
+        list_demirbas_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/demirbas?limit=999999')
+        response = demirbas_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_demirbas_mock.assert_called_once_with(limit=500)
+
 class KullanicilarListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -214,6 +237,29 @@ class KullanicilarListViewTests(SimpleTestCase):
         list_kullanicilar_mock.assert_called_once_with(limit=50)
 
 
+
+
+    @patch('apps.modules.views.list_kullanicilar')
+    def test_kullanicilar_list_clamps_limit_to_minimum(self, list_kullanicilar_mock):
+        list_kullanicilar_mock.return_value.items = []
+        list_kullanicilar_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/kullanicilar?limit=0')
+        response = kullanicilar_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_kullanicilar_mock.assert_called_once_with(limit=1)
+
+    @patch('apps.modules.views.list_kullanicilar')
+    def test_kullanicilar_list_clamps_limit_to_maximum(self, list_kullanicilar_mock):
+        list_kullanicilar_mock.return_value.items = []
+        list_kullanicilar_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/kullanicilar?limit=999999')
+        response = kullanicilar_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_kullanicilar_mock.assert_called_once_with(limit=500)
 
 class DashboardSummaryViewTests(SimpleTestCase):
     def setUp(self):
