@@ -154,8 +154,16 @@ class AuthSessionViewTests(SimpleTestCase):
         self.assertEqual(response.status_code, 200)
         payload = json.loads(response.content.decode('utf-8'))
         self.assertEqual(payload['authenticated'], True)
-        self.assertEqual(payload['user']['ID'], 7)
-        self.assertEqual(payload['user']['kullanici'], 'ali')
+        self.assertEqual(
+            payload['user'],
+            {
+                'ID': 7,
+                'kullanici': 'ali',
+                'adsoyad': 'Ali Veli',
+                'yetki': 'A',
+                'kisitlamalar': 'A0',
+            },
+        )
 
 
 class AuthPermissionsViewTests(SimpleTestCase):
