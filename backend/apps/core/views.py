@@ -54,3 +54,12 @@ def auth_session(request):
             },
         }
     )
+
+
+@csrf_exempt
+def auth_logout(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'reason': 'method_not_allowed'}, status=405)
+
+    request.session.flush()
+    return JsonResponse({'success': True})

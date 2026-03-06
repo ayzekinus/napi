@@ -4,6 +4,7 @@ import { BuluntuPreviewTable } from '@/components/buluntu-preview-table'
 import { DemirbasPreviewTable } from '@/components/demirbas-preview-table'
 import { EvrakPreviewTable } from '@/components/evrak-preview-table'
 import { ModuleStatusList } from '@/components/module-status-list'
+import { SessionStatus } from '@/components/session-status'
 import { KullanicilarPreviewTable } from '@/components/kullanicilar-preview-table'
 import {
   getAcmaRaporList,
@@ -32,6 +33,7 @@ export default async function HomePage() {
       <p>Legacy modülleri kademeli olarak yeni altyapıya taşıyoruz.</p>
 
       <p><a href="/login">Legacy uyumlu giriş ekranı</a></p>
+      <SessionStatus />
       <ModuleStatusList items={modules} />
       <AnakodPreviewTable items={anakodItems} />
       <BuluntuPreviewTable items={buluntuItems} />
