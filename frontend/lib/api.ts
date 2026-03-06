@@ -221,7 +221,10 @@ export async function getDashboardBootstrapFull(limit = 10): Promise<DashboardBo
     modules: data?.modules ?? [],
     summary: data?.summary ?? fallbackSummary,
     degraded: data?.degraded ?? true,
-    degraded_map: data?.degraded_map ?? fallbackDegradedMap,
+    degraded_map: {
+      ...fallbackDegradedMap,
+      ...(data?.degraded_map ?? {}),
+    },
     data: data?.data ?? fallbackData,
   }
 }
