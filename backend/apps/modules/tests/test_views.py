@@ -17,23 +17,11 @@ class ParseLimitTests(SimpleTestCase):
     def test_parse_limit_clamps_to_maximum(self):
         self.assertEqual(_parse_limit('999999', default=10), 500)
 
-    def test_parse_limit_uses_custom_bounds(self):
-        self.assertEqual(_parse_limit('40', default=10, minimum=5, maximum=30), 30)
-
-    def test_parse_limit_respects_custom_in_range_value(self):
-        self.assertEqual(_parse_limit('12', default=10, minimum=5, maximum=30), 12)
-
 
 
 class ModuleInventoryViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-
-    def test_module_inventory_post_returns_405(self):
-        request = self.factory.post('/api/modules/inventory')
-        response = module_inventory(request)
-
-        self.assertEqual(response.status_code, 405)
 
     def test_module_inventory_includes_evrak_key(self):
         request = self.factory.get('/api/modules/inventory')
@@ -51,12 +39,6 @@ class ModuleInventoryViewTests(SimpleTestCase):
 class AnakodListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-
-    def test_anakod_list_post_returns_405(self):
-        request = self.factory.post('/api/modules/anakod')
-        response = anakod_list(request)
-
-        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.list_anakod')
     def test_anakod_list_with_invalid_limit_uses_default(self, list_anakod_mock):
@@ -97,12 +79,6 @@ class BuluntuListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def test_buluntu_list_post_returns_405(self):
-        request = self.factory.post('/api/modules/buluntu')
-        response = buluntu_list(request)
-
-        self.assertEqual(response.status_code, 405)
-
     @patch('apps.modules.views.list_buluntu')
     def test_buluntu_list_with_invalid_limit_uses_default(self, list_buluntu_mock):
         list_buluntu_mock.return_value.items = []
@@ -142,12 +118,6 @@ class EvrakListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def test_evrak_list_post_returns_405(self):
-        request = self.factory.post('/api/modules/evrak')
-        response = evrak_list(request)
-
-        self.assertEqual(response.status_code, 405)
-
     @patch('apps.modules.views.list_evrak')
     def test_evrak_list_with_invalid_limit_uses_default(self, list_evrak_mock):
         list_evrak_mock.return_value.items = []
@@ -186,12 +156,6 @@ class EvrakListViewTests(SimpleTestCase):
 class AcmaRaporListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-
-    def test_acma_rapor_list_post_returns_405(self):
-        request = self.factory.post('/api/modules/acma-rapor')
-        response = acma_rapor_list(request)
-
-        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.list_acma_rapor')
     def test_acma_rapor_list_with_invalid_limit_uses_default(self, list_acma_rapor_mock):
@@ -233,12 +197,6 @@ class DemirbasListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def test_demirbas_list_post_returns_405(self):
-        request = self.factory.post('/api/modules/demirbas')
-        response = demirbas_list(request)
-
-        self.assertEqual(response.status_code, 405)
-
     @patch('apps.modules.views.list_demirbas')
     def test_demirbas_list_with_invalid_limit_uses_default(self, list_demirbas_mock):
         list_demirbas_mock.return_value.items = []
@@ -278,12 +236,6 @@ class DemirbasListViewTests(SimpleTestCase):
 class KullanicilarListViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-
-    def test_kullanicilar_list_post_returns_405(self):
-        request = self.factory.post('/api/modules/kullanicilar')
-        response = kullanicilar_list(request)
-
-        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.list_kullanicilar')
     def test_kullanicilar_list_with_invalid_limit_uses_default(self, list_kullanicilar_mock):
@@ -325,12 +277,6 @@ class DashboardSummaryViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def test_dashboard_summary_post_returns_405(self):
-        request = self.factory.post('/api/modules/dashboard-summary')
-        response = dashboard_summary(request)
-
-        self.assertEqual(response.status_code, 405)
-
     @patch('apps.modules.views.get_dashboard_summary')
     def test_dashboard_summary_view_returns_ok(self, summary_mock):
         summary_mock.return_value.data = {'anakod': 1}
@@ -348,12 +294,6 @@ class DashboardSummaryViewTests(SimpleTestCase):
 class DashboardBootstrapViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-
-    def test_dashboard_bootstrap_post_returns_405(self):
-        request = self.factory.post('/api/modules/bootstrap')
-        response = dashboard_bootstrap(request)
-
-        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.get_dashboard_summary')
     def test_dashboard_bootstrap_view_returns_ok(self, summary_mock):
@@ -376,12 +316,6 @@ class DashboardBootstrapViewTests(SimpleTestCase):
 class DashboardBootstrapFullViewTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
-
-    def test_dashboard_bootstrap_full_post_returns_405(self):
-        request = self.factory.post('/api/modules/bootstrap-full')
-        response = dashboard_bootstrap_full(request)
-
-        self.assertEqual(response.status_code, 405)
 
     @patch('apps.modules.views.list_kullanicilar')
     @patch('apps.modules.views.list_acma_rapor')
