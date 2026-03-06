@@ -159,3 +159,34 @@ def list_demirbas(limit: int = 50) -> QueryResult:
         for row in rows
     ]
     return QueryResult(items=items, degraded=False)
+
+
+
+def list_kullanicilar(limit: int = 50) -> QueryResult:
+    safe_limit = _safe_limit(limit)
+
+    query = """
+        SELECT ID, adsoyad, _kullanici, yetki, durum
+        FROM _kullanici
+        ORDER BY ID DESC
+        LIMIT %s
+    """
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query, [safe_limit])
+            rows = cursor.fetchall()
+    except DatabaseError:
+        return QueryResult(items=[], degraded=True)
+
+    items = [
+        {
+            'ID': row[0],
+            'adsoyad': row[1],
+            'kullanici': row[2],
+            'yetki': row[3],
+            'durum': int(row[4]),
+        }
+        for row in rows
+    ]
+    return QueryResult(items=items, degraded=False)

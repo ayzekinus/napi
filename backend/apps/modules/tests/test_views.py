@@ -3,7 +3,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 from django.test.client import RequestFactory
 
-from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, demirbas_list, evrak_list
+from apps.modules.views import acma_rapor_list, anakod_list, buluntu_list, demirbas_list, evrak_list, kullanicilar_list
 
 
 class AnakodListViewTests(SimpleTestCase):
@@ -85,3 +85,20 @@ class DemirbasListViewTests(SimpleTestCase):
 
         self.assertEqual(response.status_code, 200)
         list_demirbas_mock.assert_called_once_with(limit=50)
+
+
+
+class KullanicilarListViewTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    @patch('apps.modules.views.list_kullanicilar')
+    def test_kullanicilar_list_with_invalid_limit_uses_default(self, list_kullanicilar_mock):
+        list_kullanicilar_mock.return_value.items = []
+        list_kullanicilar_mock.return_value.degraded = False
+
+        request = self.factory.get('/api/modules/kullanicilar?limit=abc')
+        response = kullanicilar_list(request)
+
+        self.assertEqual(response.status_code, 200)
+        list_kullanicilar_mock.assert_called_once_with(limit=50)

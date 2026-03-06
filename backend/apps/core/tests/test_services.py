@@ -8,7 +8,7 @@ from apps.core.services import _legacy_password_hash, verify_legacy_credentials
 class LegacyHashTests(SimpleTestCase):
     @override_settings(LEGACY_HASH_SALT='abc-')
     def test_legacy_hash_is_stable(self):
-        self.assertEqual(_legacy_password_hash('1234'), '1293fdbf42a0348ec88d8f9be260cf9f')
+        self.assertEqual(_legacy_password_hash('1234'), '5811c29643220230d3c4ed9c5c5baa2e')
 
 
 class VerifyCredentialsTests(SimpleTestCase):

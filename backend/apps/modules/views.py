@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from .services import list_acma_rapor, list_anakod, list_buluntu, list_demirbas, list_evrak
+from .services import list_acma_rapor, list_anakod, list_buluntu, list_demirbas, list_evrak, list_kullanicilar
 
 
 LEGACY_MODULES = [
@@ -9,7 +9,7 @@ LEGACY_MODULES = [
     {'key': 'acma_rapor', 'status': 'in_progress'},
     {'key': 'evrak_yonetimi', 'status': 'in_progress'},
     {'key': 'demirbas', 'status': 'in_progress'},
-    {'key': 'kullanicilar', 'status': 'planned'},
+    {'key': 'kullanicilar', 'status': 'in_progress'},
 ]
 
 
@@ -81,6 +81,20 @@ def demirbas_list(request):
     limit = _parse_limit(request.GET.get('limit', '50'))
 
     result = list_demirbas(limit=limit)
+    return JsonResponse(
+        {
+            'items': result.items,
+            'count': len(result.items),
+            'degraded': result.degraded,
+        }
+    )
+
+
+
+def kullanicilar_list(request):
+    limit = _parse_limit(request.GET.get('limit', '50'))
+
+    result = list_kullanicilar(limit=limit)
     return JsonResponse(
         {
             'items': result.items,

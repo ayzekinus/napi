@@ -29,6 +29,14 @@ export type DemirbasItem = {
   durum: number
 }
 
+export type KullaniciItem = {
+  ID: number
+  adsoyad: string
+  kullanici: string
+  yetki: string
+  durum: number
+}
+
 export type AcmaRaporItem = {
   acma_rapor_id: number
   acma_rapor_no: string
@@ -112,5 +120,19 @@ export async function getDemirbasList(limit = 10): Promise<DemirbasItem[]> {
   }
 
   const data = (await response.json()) as { items?: DemirbasItem[] }
+  return data.items ?? []
+}
+
+
+export async function getKullanicilarList(limit = 10): Promise<KullaniciItem[]> {
+  const response = await fetch(`${API_BASE}/modules/kullanicilar?limit=${limit}`, {
+    cache: 'no-store',
+  })
+
+  if (!response.ok) {
+    return []
+  }
+
+  const data = (await response.json()) as { items?: KullaniciItem[] }
   return data.items ?? []
 }

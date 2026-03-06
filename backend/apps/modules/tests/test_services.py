@@ -10,6 +10,7 @@ from apps.modules.services import (
     list_buluntu,
     list_demirbas,
     list_evrak,
+    list_kullanicilar,
 )
 
 
@@ -201,6 +202,51 @@ class ListDemirbasServiceTests(SimpleTestCase):
         connection_mock.cursor.side_effect = DatabaseError('db error')
 
         result = list_demirbas(limit=25)
+
+        self.assertTrue(result.degraded)
+        self.assertEqual(result.items, [])
+
+
+
+class ListKullanicilarServiceTests(SimpleTestCase):
+    @patch('apps.modules.services.connection')
+    def test_list_kullanicilar_returns_rows(self, connection_mock):
+        cursor_mock = Mock()
+        cursor_mock.fetchall.return_value = [
+            (12, 'Ali Veli', 'ali', 'A', 1),
+            (11, 'Ayse Test', 'ayse', 'R', 0),
+        ]
+
+        connection_mock.cursor.return_value.__enter__.return_value = cursor_mock
+
+        result = list_kullanicilar(limit=2)
+
+        self.assertFalse(result.degraded)
+        self.assertEqual(
+            result.items,
+            [
+                {
+                    'ID': 12,
+                    'adsoyad': 'Ali Veli',
+                    'kullanici': 'ali',
+                    'yetki': 'A',
+                    'durum': 1,
+                },
+                {
+                    'ID': 11,
+                    'adsoyad': 'Ayse Test',
+                    'kullanici': 'ayse',
+                    'yetki': 'R',
+                    'durum': 0,
+                },
+            ],
+        )
+
+    @patch('apps.modules.services.connection')
+    def test_list_kullanicilar_handles_db_error(self, connection_mock):
+        connection_mock.cursor.side_effect = DatabaseError('db error')
+
+        result = list_kullanicilar(limit=25)
 
         self.assertTrue(result.degraded)
         self.assertEqual(result.items, [])
