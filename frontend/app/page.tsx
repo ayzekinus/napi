@@ -12,18 +12,16 @@ import {
   getAcmaRaporList,
   getAnakodList,
   getBuluntuList,
-  getDashboardSummary,
+  getDashboardBootstrap,
   getDemirbasList,
   getEvrakList,
   getKullanicilarList,
-  getModuleInventory,
 } from '@/lib/api'
 
 export default async function HomePage() {
-  const [modules, summaryResponse, anakodItems, buluntuItems, demirbasItems, evrakItems, acmaRaporItems, kullaniciItems] =
+  const [bootstrap, anakodItems, buluntuItems, demirbasItems, evrakItems, acmaRaporItems, kullaniciItems] =
     await Promise.all([
-      getModuleInventory(),
-      getDashboardSummary(),
+      getDashboardBootstrap(),
       getAnakodList(10),
       getBuluntuList(10),
       getDemirbasList(10),
@@ -41,9 +39,9 @@ export default async function HomePage() {
         <a href="/login">Legacy uyumlu giriş ekranı</a>
       </p>
       <SessionStatus />
-      <DashboardDegradedAlert degraded={summaryResponse.degraded} />
-      <DashboardSummaryCards summary={summaryResponse.summary} />
-      <ModuleStatusList items={modules} />
+      <DashboardDegradedAlert degraded={bootstrap.degraded} />
+      <DashboardSummaryCards summary={bootstrap.summary} />
+      <ModuleStatusList items={bootstrap.modules} />
       <AnakodPreviewTable items={anakodItems} />
       <BuluntuPreviewTable items={buluntuItems} />
       <DemirbasPreviewTable items={demirbasItems} />

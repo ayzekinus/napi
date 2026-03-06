@@ -57,6 +57,12 @@ export type DashboardSummaryResponse = {
   degraded: boolean
 }
 
+export type DashboardBootstrapResponse = {
+  modules: ModuleInventoryItem[]
+  summary: DashboardSummary
+  degraded: boolean
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000/api'
 
 async function safeFetchJson<T>(path: string): Promise<T | null> {
@@ -122,6 +128,30 @@ export async function getDashboardSummary(): Promise<DashboardSummaryResponse> {
 
   const data = await safeFetchJson<{ summary?: DashboardSummary; degraded?: boolean }>('/modules/dashboard-summary')
   return {
+    summary: data?.summary ?? fallbackSummary,
+    degraded: data?.degraded ?? true,
+  }
+}
+
+
+export async function getDashboardBootstrap(): Promise<DashboardBootstrapResponse> {
+  const fallbackSummary: DashboardSummary = {
+    anakod: 0,
+    buluntu: 0,
+    acma_rapor: 0,
+    evrak: 0,
+    demirbas: 0,
+    kullanicilar: 0,
+  }
+
+  const data = await safeFetchJson<{
+    modules?: ModuleInventoryItem[]
+    summary?: DashboardSummary
+    degraded?: boolean
+  }>('/modules/bootstrap')
+
+  return {
+    modules: data?.modules ?? [],
     summary: data?.summary ?? fallbackSummary,
     degraded: data?.degraded ?? true,
   }

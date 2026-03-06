@@ -7,6 +7,7 @@ from .views import (
     evrak_list,
     demirbas_list,
     dashboard_summary,
+    dashboard_bootstrap,
     module_inventory,
     kullanicilar_list,
 )
@@ -20,4 +21,5 @@ urlpatterns = [
     path('demirbas', demirbas_list, name='demirbas-list'),
     path('kullanicilar', kullanicilar_list, name='kullanicilar-list'),
     path('dashboard-summary', dashboard_summary, name='dashboard-summary'),
+    path('bootstrap', dashboard_bootstrap, name='dashboard-bootstrap'),
 ]

@@ -113,3 +113,15 @@ def dashboard_summary(_request):
             'degraded': result.degraded,
         }
     )
+
+
+
+def dashboard_bootstrap(_request):
+    summary = get_dashboard_summary()
+    return JsonResponse(
+        {
+            'modules': LEGACY_MODULES,
+            'summary': summary.data,
+            'degraded': summary.degraded,
+        }
+    )
