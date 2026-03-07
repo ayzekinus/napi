@@ -317,3 +317,24 @@ Amaç:
 ```bash
 python3 backend/scripts/export_evidence_summary_md.py
 ```
+
+
+---
+
+## 20) Post-Program Araçlandırma (Evidence Pipeline)
+
+Eklenen script:
+- `backend/scripts/run_evidence_pipeline.py`
+
+Amaç:
+- Evidence oluşturma/doğrulama ve raporlama adımlarını tek komutta çalıştırmak.
+
+Kapsanan adımlar:
+1. `open_and_validate_live_evidence.py`
+2. `evidence_status_report.py`
+3. `export_evidence_summary_md.py`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/run_evidence_pipeline.py
+```
