@@ -17,12 +17,12 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 1 — Kontrat Dondurma + Ölçümleme
 
-- [ ] Read-only sözleşmesinin resmi freeze'i (endpoint + payload + method seti).
+- [x] Read-only sözleşmesinin resmi freeze'i (endpoint + payload + method seti).
 - [ ] "migration readiness" metriği tanımı:
   - API sözleşme test kapsaması
   - Modül bazlı degraded görünürlüğü
   - Kritik auth akış başarı oranı
-- [ ] Takvimdeki tüm maddeler için owner/doğrulama komutu eklenmesi.
+- [x] Takvimdeki tüm maddeler için owner/doğrulama komutu eklenmesi (Hafta-1 kapsamı).
 
 **Çıkış kriteri**
 - Tek sayfalık "freeze scope" tamam ve repoda yayınlanmış.
