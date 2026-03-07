@@ -237,3 +237,19 @@ Eklenen artefakt:
 
 Amaç:
 - Program kapanışı sonrası dry-run, canlı cutover, 72 saat stabilizasyon ve legacy decommission kanıtlarının tek formatta toplanması.
+
+
+---
+
+## 15) Post-Program Araçlandırma (Evidence Stub Generator)
+
+Eklenen script:
+- `backend/scripts/generate_live_evidence_stub.py`
+
+Amaç:
+- `MIGRATION_LIVE_EVIDENCE_TEMPLATE.md` şablonundan zaman damgalı canlı kanıt dosyası üretmek.
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/generate_live_evidence_stub.py
+```
