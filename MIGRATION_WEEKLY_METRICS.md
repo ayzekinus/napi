@@ -227,3 +227,13 @@ Program kapanış raporu:
 Özet:
 - Hafta-1..Hafta-6 plan maddeleri dokümantasyon/artefakt seviyesinde tamamlandı.
 - Kalan iş, canlı ortam yürütüm kanıtlarının (dry-run/cutover/stabilizasyon logları) operasyonel onayıdır.
+
+---
+
+## 14) Post-Program Operasyonel Kanıt Şablonu
+
+Eklenen artefakt:
+- `MIGRATION_LIVE_EVIDENCE_TEMPLATE.md`
+
+Amaç:
+- Program kapanışı sonrası dry-run, canlı cutover, 72 saat stabilizasyon ve legacy decommission kanıtlarının tek formatta toplanması.
