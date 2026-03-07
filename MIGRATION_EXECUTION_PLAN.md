@@ -32,7 +32,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 - [x] Legacy tablo -> yeni servis alan mapping matrisi çıkarılması.
 - [x] Satır sayısı karşılaştırma scripti (tablo bazlı).
-- [ ] Örnek kayıt karşılaştırma scripti (deterministik örneklem ile).
+- [x] Örnek kayıt karşılaştırma scripti (deterministik örneklem ile).
 
 **Çıkış kriteri**
 - En az kritik 6 modül için mapping dosyası tamam.

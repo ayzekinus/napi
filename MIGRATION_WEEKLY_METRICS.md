@@ -69,3 +69,22 @@ Her hafta aşağıdaki blok eklenir:
 - Kırmızı riskler ve aksiyon planı
 
 Bu yapı ile geçiş ilerlemesi "yorum" yerine "ölçüm" ile yönetilir.
+
+---
+
+## 4) Hafta-2 İlerleme Notu
+
+Tamamlanan maddeler:
+- Mapping matrisi (`MIGRATION_MAPPING_MATRIX.md`)
+- Satır sayısı karşılaştırma scripti (`backend/scripts/row_count_compare.py`)
+- Örnek kayıt karşılaştırma scripti (`backend/scripts/sample_record_compare.py`)
+
+Hafta-2 doğrulama komutları:
+
+```bash
+python3 -m py_compile backend/scripts/row_count_compare.py
+python3 -m py_compile backend/scripts/sample_record_compare.py
+```
+
+Not:
+- Scriptlerin canlı karşılaştırma çalışması için legacy şemanın erişilebilir olduğu DB bağlantısı gereklidir.
