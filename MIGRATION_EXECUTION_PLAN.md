@@ -52,7 +52,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 - [x] En kritik kullanıcı senaryoları için UAT checklist.
 - [x] Cutover runbook taslağı (adım adım, süre tahmini ile).
-- [x] Rollback runbook + geri dönüş süresi hedefi (RTO).
+- [ ] Rollback runbook + geri dönüş süresi hedefi (RTO).
 
 **Çıkış kriteri**
 - UAT checklist'inin en az %90'ı yeşil.
