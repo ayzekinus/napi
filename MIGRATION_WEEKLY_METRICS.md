@@ -127,3 +127,19 @@ Eklenen artefakt:
 
 Bloker senaryolar:
 - UAT-02, UAT-03, UAT-05, UAT-08, UAT-10, UAT-13
+
+
+---
+
+## 7) Hafta-4 İlerleme (Cutover Runbook)
+
+Eklenen artefakt:
+- `MIGRATION_CUTOVER_RUNBOOK.md`
+
+Planlanan cutover penceresi:
+- ~1.5 saat (T-30 hazırlık -> T+60 final karar)
+
+Go/No-Go girdileri:
+- UAT >= %90
+- Bloker UAT maddeleri yeşil
+- Son 3 shadow diff raporunda kritik regresyon yok
