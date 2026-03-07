@@ -143,3 +143,76 @@ Go/No-Go girdileri:
 - UAT >= %90
 - Bloker UAT maddeleri yeşil
 - Son 3 shadow diff raporunda kritik regresyon yok
+
+
+---
+
+## 8) Hafta-4 İlerleme (Rollback Runbook)
+
+Eklenen artefakt:
+- `MIGRATION_ROLLBACK_RUNBOOK.md`
+
+Hedefler:
+- RTO <= 15 dakika
+- Rollback tetik koşullarının metrik bazlı tanımlanması
+- Dry-run kontrol listesi ile operasyonel doğrulama
+
+
+---
+
+## 9) Hafta-5 Başlangıç (Traffic Ramp Plan)
+
+Eklenen artefakt:
+- `MIGRATION_TRAFFIC_RAMP_PLAN.md`
+
+Ramp fazları:
+- Ramp-1: %5
+- Ramp-2: %20
+- Ramp-3: %50
+
+Faz geçiş kuralı:
+- Error/auth/latency eşikleri + shadow diff + degraded metrikleri birlikte yeşil olmalı.
+
+
+---
+
+## 10) Hafta-5 İlerleme (Monitoring + Auto-Rollback)
+
+Eklenen artefaktlar:
+- `MIGRATION_TRAFFIC_MONITORING_RUNBOOK.md`
+- `MIGRATION_AUTO_ROLLBACK_PROCEDURE.md`
+
+Kritik eşikler:
+- 5xx < %1
+- Auth başarı > %98
+- p95 latency SLO altında
+- degraded error_checks = 0
+
+Otomatik tetik kuralı:
+- Eşik ihlali 2 ardışık tur sürerse rollback_candidate alarmı üretilir.
+
+
+---
+
+## 11) Hafta-6 Başlangıç (%100 Cutover)
+
+Eklenen artefakt:
+- `MIGRATION_FULL_CUTOVER_RUNBOOK.md`
+
+Ana karar sinyalleri:
+- 5xx, auth başarı, p95 latency, degraded error_checks
+
+Karar noktası:
+- T+10 dakikada continue vs rollback değerlendirmesi
+
+
+---
+
+## 12) Hafta-6 İlerleme (Stabilizasyon + Decommission)
+
+Eklenen artefaktlar:
+- `MIGRATION_STABILIZATION_PLAYBOOK.md`
+- `MIGRATION_LEGACY_DECOMMISSION_PLAN.md`
+
+Hafta-6 kapanış hedefi:
+- 72 saat stabilizasyon sonucu + legacy bağımlılık kapatma fazlarının başlatılabilir olması

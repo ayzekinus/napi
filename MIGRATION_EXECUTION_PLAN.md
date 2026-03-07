@@ -60,9 +60,9 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 5 — Kademeli Trafik Geçişi
 
-- [ ] Trafiğin küçük yüzdesini yeni stack'e alma (ör. %5 -> %20 -> %50).
-- [ ] Hata oranı, auth başarı oranı, kritik endpoint latency takibi.
-- [ ] Eşik aşımlarında otomatik rollback tetik prosedürü.
+- [x] Trafiğin küçük yüzdesini yeni stack'e alma (ör. %5 -> %20 -> %50).
+- [x] Hata oranı, auth başarı oranı, kritik endpoint latency takibi.
+- [x] Eşik aşımlarında otomatik rollback tetik prosedürü.
 
 **Çıkış kriteri**
 - Önceden tanımlanan SLO/SLA eşikleri korunuyor.
@@ -70,9 +70,9 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 6 — Tam Cutover + Stabilizasyon
 
-- [ ] %100 trafik geçişi.
-- [ ] 72 saat yoğun gözlem (stabilizasyon penceresi).
-- [ ] Legacy bağımlılıklarının aşamalı kapatılması planı.
+- [x] %100 trafik geçişi.
+- [x] 72 saat yoğun gözlem (stabilizasyon penceresi).
+- [x] Legacy bağımlılıklarının aşamalı kapatılması planı.
 
 **Çıkış kriteri**
 - Kritik iş akışları stabil.
