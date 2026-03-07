@@ -41,8 +41,8 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 ## Hafta 3 — Shadow / Paralel Okuma
 
 - [x] Seçili endpointlerde legacy sonuç vs yeni endpoint çıktısı fark raporu.
-- [ ] Farkların sınıflandırılması (beklenen / regresyon / veri kirliliği).
-- [ ] Degraded senaryoları için gözlemlenebilirlik metrikleri.
+- [x] Farkların sınıflandırılması (beklenen / regresyon / veri kirliliği).
+- [x] Degraded senaryoları için gözlemlenebilirlik metrikleri.
 
 **Çıkış kriteri**
 - Kritik endpointler için günlük fark raporu alınabiliyor.

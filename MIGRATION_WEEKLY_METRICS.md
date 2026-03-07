@@ -108,3 +108,8 @@ Doğrulama komutu:
 ```bash
 python3 -m py_compile backend/scripts/shadow_diff_report.py
 ```
+
+
+Hafta-3 sınıflandırma + gözlemlenebilirlik güncellemesi:
+- `shadow_diff_report.py` artık farkları `beklenen / regresyon / veri_kirliligi / degraded_or_runtime_error` sınıflarıyla raporlar.
+- Rapor çıktısında `degraded_metrics` bloğu eklendi (`degraded_detected`, `degraded_sources`, `total_checks`, `error_checks`).
