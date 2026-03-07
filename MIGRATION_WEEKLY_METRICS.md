@@ -269,3 +269,19 @@ Amaç:
 ```bash
 python3 backend/scripts/validate_live_evidence.py migration-evidence/live-evidence-<timestamp>.md
 ```
+
+
+---
+
+## 17) Post-Program Araçlandırma (Evidence Orchestrator)
+
+Eklenen script:
+- `backend/scripts/open_and_validate_live_evidence.py`
+
+Amaç:
+- Evidence dosyası açma ve ilk doğrulama adımını tek komutta çalıştırmak.
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/open_and_validate_live_evidence.py
+```
