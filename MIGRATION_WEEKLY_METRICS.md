@@ -285,3 +285,19 @@ Amaç:
 ```bash
 python3 backend/scripts/open_and_validate_live_evidence.py
 ```
+
+
+---
+
+## 18) Post-Program Araçlandırma (Evidence Status Report)
+
+Eklenen script:
+- `backend/scripts/evidence_status_report.py`
+
+Amaç:
+- `migration-evidence/` altındaki tüm evidence dosyalarını toplu doğrulayıp geçerli/geçersiz özetini üretmek.
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_status_report.py
+```
