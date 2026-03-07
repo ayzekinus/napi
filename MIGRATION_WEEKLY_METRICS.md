@@ -216,3 +216,14 @@ Eklenen artefaktlar:
 
 Hafta-6 kapanış hedefi:
 - 72 saat stabilizasyon sonucu + legacy bağımlılık kapatma fazlarının başlatılabilir olması
+
+---
+
+## 13) Program Kapanış Durumu
+
+Program kapanış raporu:
+- `MIGRATION_PROGRAM_COMPLETION_REPORT.md`
+
+Özet:
+- Hafta-1..Hafta-6 plan maddeleri dokümantasyon/artefakt seviyesinde tamamlandı.
+- Kalan iş, canlı ortam yürütüm kanıtlarının (dry-run/cutover/stabilizasyon logları) operasyonel onayıdır.
