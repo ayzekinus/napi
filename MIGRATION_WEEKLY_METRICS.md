@@ -88,3 +88,23 @@ python3 -m py_compile backend/scripts/sample_record_compare.py
 
 Not:
 - Scriptlerin canlı karşılaştırma çalışması için legacy şemanın erişilebilir olduğu DB bağlantısı gereklidir.
+
+
+---
+
+## 5) Hafta-3 Başlangıç (Shadow Diff Raporu)
+
+Eklenen otomasyon:
+- `backend/scripts/shadow_diff_report.py`
+
+Amaç:
+- `row_count_compare.py` ve `sample_record_compare.py` çıktısını tek raporda birleştirerek günlük shadow diff görünürlüğü üretmek.
+
+Rapor çıktısı:
+- `backend/reports/shadow_diff_report.json`
+
+Doğrulama komutu:
+
+```bash
+python3 -m py_compile backend/scripts/shadow_diff_report.py
+```
