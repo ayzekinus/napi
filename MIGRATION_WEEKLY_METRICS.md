@@ -190,3 +190,17 @@ Kritik eşikler:
 
 Otomatik tetik kuralı:
 - Eşik ihlali 2 ardışık tur sürerse rollback_candidate alarmı üretilir.
+
+
+---
+
+## 11) Hafta-6 Başlangıç (%100 Cutover)
+
+Eklenen artefakt:
+- `MIGRATION_FULL_CUTOVER_RUNBOOK.md`
+
+Ana karar sinyalleri:
+- 5xx, auth başarı, p95 latency, degraded error_checks
+
+Karar noktası:
+- T+10 dakikada continue vs rollback değerlendirmesi

@@ -70,7 +70,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 6 — Tam Cutover + Stabilizasyon
 
-- [ ] %100 trafik geçişi.
+- [x] %100 trafik geçişi.
 - [ ] 72 saat yoğun gözlem (stabilizasyon penceresi).
 - [ ] Legacy bağımlılıklarının aşamalı kapatılması planı.
 
