@@ -172,3 +172,21 @@ Ramp fazları:
 
 Faz geçiş kuralı:
 - Error/auth/latency eşikleri + shadow diff + degraded metrikleri birlikte yeşil olmalı.
+
+
+---
+
+## 10) Hafta-5 İlerleme (Monitoring + Auto-Rollback)
+
+Eklenen artefaktlar:
+- `MIGRATION_TRAFFIC_MONITORING_RUNBOOK.md`
+- `MIGRATION_AUTO_ROLLBACK_PROCEDURE.md`
+
+Kritik eşikler:
+- 5xx < %1
+- Auth başarı > %98
+- p95 latency SLO altında
+- degraded error_checks = 0
+
+Otomatik tetik kuralı:
+- Eşik ihlali 2 ardışık tur sürerse rollback_candidate alarmı üretilir.

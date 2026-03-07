@@ -61,8 +61,8 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 ## Hafta 5 — Kademeli Trafik Geçişi
 
 - [x] Trafiğin küçük yüzdesini yeni stack'e alma (ör. %5 -> %20 -> %50).
-- [ ] Hata oranı, auth başarı oranı, kritik endpoint latency takibi.
-- [ ] Eşik aşımlarında otomatik rollback tetik prosedürü.
+- [x] Hata oranı, auth başarı oranı, kritik endpoint latency takibi.
+- [x] Eşik aşımlarında otomatik rollback tetik prosedürü.
 
 **Çıkış kriteri**
 - Önceden tanımlanan SLO/SLA eşikleri korunuyor.
