@@ -99,6 +99,6 @@ Bu doküman, `MIGRATION_EXECUTION_PLAN.md` içindeki **Hafta-2: Legacy tablo -> 
 ## Hafta-2 Sonraki Adım
 
 - Bu matrisi kullanarak:
-  1) tablo bazlı satır sayısı karşılaştırma scripti,
-  2) örnek kayıt karşılaştırma scripti
+  1) tablo bazlı satır sayısı karşılaştırma scripti ✅ (`backend/scripts/row_count_compare.py`),
+  2) örnek kayıt karşılaştırma scripti (sıradaki adım)
   hazırlanacak.

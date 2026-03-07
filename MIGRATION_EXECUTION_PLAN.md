@@ -31,7 +31,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 ## Hafta 2 — Veri Eşleme (Mapping) ve Doğrulama Scriptleri
 
 - [x] Legacy tablo -> yeni servis alan mapping matrisi çıkarılması.
-- [ ] Satır sayısı karşılaştırma scripti (tablo bazlı).
+- [x] Satır sayısı karşılaştırma scripti (tablo bazlı).
 - [ ] Örnek kayıt karşılaştırma scripti (deterministik örneklem ile).
 
 **Çıkış kriteri**
