@@ -253,3 +253,19 @@ Amaç:
 ```bash
 python3 backend/scripts/generate_live_evidence_stub.py
 ```
+
+
+---
+
+## 16) Post-Program Araçlandırma (Evidence Validator)
+
+Eklenen script:
+- `backend/scripts/validate_live_evidence.py`
+
+Amaç:
+- Üretilen canlı kanıt dosyalarının zorunlu alanlarını (dry-run/cutover/stabilizasyon/decommission/final onay) otomatik doğrulamak.
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/validate_live_evidence.py migration-evidence/live-evidence-<timestamp>.md
+```
