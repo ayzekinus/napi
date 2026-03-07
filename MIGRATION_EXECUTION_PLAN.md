@@ -52,7 +52,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 - [x] En kritik kullanıcı senaryoları için UAT checklist.
 - [x] Cutover runbook taslağı (adım adım, süre tahmini ile).
-- [x] Rollback runbook + geri dönüş süresi hedefi (RTO).
+- [ ] Rollback runbook + geri dönüş süresi hedefi (RTO).
 
 **Çıkış kriteri**
 - UAT checklist'inin en az %90'ı yeşil.
@@ -60,9 +60,9 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 5 — Kademeli Trafik Geçişi
 
-- [x] Trafiğin küçük yüzdesini yeni stack'e alma (ör. %5 -> %20 -> %50).
-- [x] Hata oranı, auth başarı oranı, kritik endpoint latency takibi.
-- [x] Eşik aşımlarında otomatik rollback tetik prosedürü.
+- [ ] Trafiğin küçük yüzdesini yeni stack'e alma (ör. %5 -> %20 -> %50).
+- [ ] Hata oranı, auth başarı oranı, kritik endpoint latency takibi.
+- [ ] Eşik aşımlarında otomatik rollback tetik prosedürü.
 
 **Çıkış kriteri**
 - Önceden tanımlanan SLO/SLA eşikleri korunuyor.
@@ -70,7 +70,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 6 — Tam Cutover + Stabilizasyon
 
-- [x] %100 trafik geçişi.
+- [ ] %100 trafik geçişi.
 - [ ] 72 saat yoğun gözlem (stabilizasyon penceresi).
 - [ ] Legacy bağımlılıklarının aşamalı kapatılması planı.
 
