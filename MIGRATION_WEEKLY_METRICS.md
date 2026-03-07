@@ -143,3 +143,16 @@ Go/No-Go girdileri:
 - UAT >= %90
 - Bloker UAT maddeleri yeşil
 - Son 3 shadow diff raporunda kritik regresyon yok
+
+
+---
+
+## 8) Hafta-4 İlerleme (Rollback Runbook)
+
+Eklenen artefakt:
+- `MIGRATION_ROLLBACK_RUNBOOK.md`
+
+Hedefler:
+- RTO <= 15 dakika
+- Rollback tetik koşullarının metrik bazlı tanımlanması
+- Dry-run kontrol listesi ile operasyonel doğrulama
