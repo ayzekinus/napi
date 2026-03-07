@@ -50,7 +50,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 
 ## Hafta 4 — UAT + Operasyon Provaları
 
-- [ ] En kritik kullanıcı senaryoları için UAT checklist.
+- [x] En kritik kullanıcı senaryoları için UAT checklist.
 - [ ] Cutover runbook taslağı (adım adım, süre tahmini ile).
 - [ ] Rollback runbook + geri dönüş süresi hedefi (RTO).
 
