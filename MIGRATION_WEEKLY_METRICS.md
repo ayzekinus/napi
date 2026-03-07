@@ -156,3 +156,19 @@ Hedefler:
 - RTO <= 15 dakika
 - Rollback tetik koşullarının metrik bazlı tanımlanması
 - Dry-run kontrol listesi ile operasyonel doğrulama
+
+
+---
+
+## 9) Hafta-5 Başlangıç (Traffic Ramp Plan)
+
+Eklenen artefakt:
+- `MIGRATION_TRAFFIC_RAMP_PLAN.md`
+
+Ramp fazları:
+- Ramp-1: %5
+- Ramp-2: %20
+- Ramp-3: %50
+
+Faz geçiş kuralı:
+- Error/auth/latency eşikleri + shadow diff + degraded metrikleri birlikte yeşil olmalı.
