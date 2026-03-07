@@ -18,7 +18,7 @@ Bu doküman, read-only fazdan kontrollü cutover'a kadar uygulanacak **tek sorum
 ## Hafta 1 — Kontrat Dondurma + Ölçümleme
 
 - [x] Read-only sözleşmesinin resmi freeze'i (endpoint + payload + method seti).
-- [ ] "migration readiness" metriği tanımı:
+- [x] "migration readiness" metriği tanımı:
   - API sözleşme test kapsaması
   - Modül bazlı degraded görünürlüğü
   - Kritik auth akış başarı oranı
