@@ -301,3 +301,19 @@ Amaç:
 ```bash
 python3 backend/scripts/evidence_status_report.py
 ```
+
+
+---
+
+## 19) Post-Program Araçlandırma (Evidence Markdown Summary)
+
+Eklenen script:
+- `backend/scripts/export_evidence_summary_md.py`
+
+Amaç:
+- Evidence status JSON çıktısını ekip paylaşımı için markdown özet rapora dönüştürmek (`backend/reports/evidence_status_summary.md`).
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/export_evidence_summary_md.py
+```
