@@ -419,3 +419,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Evidence gate raporlama adımlarını tek komutta toplamak için `backend/scripts/run_evidence_gate_reporting.py` eklendi.
 - Script, sırasıyla history kaydı + trend JSON üretimi + trend markdown export akışını çalıştırır.
 - Böylece post-program gate görünürlüğü için operasyon ekipleri daha az manuel komutla rapor üretebilir.
+
+
+## Yeni adım (phase-73)
+- Gate raporlama çıktı bütünlüğünü hızlı kontrol etmek için `backend/scripts/evidence_gate_report_health.py` eklendi.
+- Script, history/trend json/trend markdown dosyalarının varlık ve boyut kontrollerini yapar; trend JSON parse edilebiliyorsa temel alanları da doğrular.
+- Böylece operasyon ekipleri raporlama artefaktlarının hazır olup olmadığını tek komutla görebilir.
