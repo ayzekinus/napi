@@ -396,3 +396,22 @@ Amaç:
 ```bash
 python3 backend/scripts/evidence_gate_trend.py
 ```
+
+
+---
+
+## 24) Post-Program Araçlandırma (Evidence Gate Trend Markdown Export)
+
+Eklenen script:
+- `backend/scripts/export_evidence_gate_trend_md.py`
+
+Amaç:
+- Gate trend JSON çıktısını okunabilir markdown rapora çevirmek.
+
+Çıktı:
+- `backend/reports/evidence_gate_trend.md`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/export_evidence_gate_trend_md.py
+```

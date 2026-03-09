@@ -407,3 +407,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Post-program karar performansını izlemek için `backend/scripts/evidence_gate_trend.py` eklendi.
 - Script, `evidence_gate_history.jsonl` geçmişini özetleyip `go/hold` trendini JSON çıktısı olarak üretir.
 - Böylece operasyon ekipleri gate kararlarının dağılımını (go oranı, son karar nedeni) tek rapordan takip edebilir.
+
+
+## Yeni adım (phase-71)
+- Evidence gate trend çıktısını ekip paylaşımına uygun hale getirmek için `backend/scripts/export_evidence_gate_trend_md.py` eklendi.
+- Script, `backend/reports/evidence_gate_trend.json` verisini markdown özete çevirir (`backend/reports/evidence_gate_trend.md`).
+- Böylece operasyon toplantılarında gate trendinin okunabilir formatta takibi kolaylaştırıldı.
