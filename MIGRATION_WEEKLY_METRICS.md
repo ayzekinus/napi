@@ -338,3 +338,42 @@ Kapsanan adımlar:
 ```bash
 python3 backend/scripts/run_evidence_pipeline.py
 ```
+
+
+---
+
+## 21) Post-Program Araçlandırma (Evidence Gate Decision)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_decision.py`
+
+Amaç:
+- Evidence durum özetinden otomatik `go/hold` kararı üretmek.
+
+Karar kuralı:
+- `go`: total > 0 ve invalid = 0
+- aksi halde `hold`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_decision.py
+```
+
+
+---
+
+## 22) Post-Program Araçlandırma (Evidence Gate History)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_history.py`
+
+Amaç:
+- Evidence gate (`go/hold`) kararlarının zaman damgalı geçmişini tutmak.
+
+Çıktı:
+- `backend/reports/evidence_gate_history.jsonl`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_history.py
+```
