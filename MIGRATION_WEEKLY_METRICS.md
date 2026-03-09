@@ -377,3 +377,22 @@ Amaç:
 ```bash
 python3 backend/scripts/evidence_gate_history.py
 ```
+
+
+---
+
+## 23) Post-Program Araçlandırma (Evidence Gate Trend)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_trend.py`
+
+Amaç:
+- Evidence gate history dosyasından `go/hold` trend özetini üretmek.
+
+Çıktı:
+- `backend/reports/evidence_gate_trend.json`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_trend.py
+```

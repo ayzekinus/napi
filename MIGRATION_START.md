@@ -401,3 +401,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Post-program karar süreçlerinde izlenebilirlik için `backend/scripts/evidence_gate_history.py` eklendi.
 - Script, `evidence_gate_decision.py` çıktısını zaman damgasıyla `backend/reports/evidence_gate_history.jsonl` dosyasına ekler.
 - Böylece operasyon ekipleri `go/hold` kararlarının kronolojik geçmişini tek log dosyasında takip edebilir.
+
+
+## Yeni adım (phase-70)
+- Post-program karar performansını izlemek için `backend/scripts/evidence_gate_trend.py` eklendi.
+- Script, `evidence_gate_history.jsonl` geçmişini özetleyip `go/hold` trendini JSON çıktısı olarak üretir.
+- Böylece operasyon ekipleri gate kararlarının dağılımını (go oranı, son karar nedeni) tek rapordan takip edebilir.
