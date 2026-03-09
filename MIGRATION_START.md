@@ -395,3 +395,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Post-program kapanış kararını standardize etmek için `backend/scripts/evidence_gate_decision.py` eklendi.
 - Script, evidence durumu üzerinden otomatik `go/hold` kararı ve nedenini JSON çıktısı olarak üretir.
 - Böylece final operasyon onayı öncesi karar kuralı tek komutla uygulanabilir hale getirildi.
+
+
+## Yeni adım (phase-69)
+- Post-program karar süreçlerinde izlenebilirlik için `backend/scripts/evidence_gate_history.py` eklendi.
+- Script, `evidence_gate_decision.py` çıktısını zaman damgasıyla `backend/reports/evidence_gate_history.jsonl` dosyasına ekler.
+- Böylece operasyon ekipleri `go/hold` kararlarının kronolojik geçmişini tek log dosyasında takip edebilir.

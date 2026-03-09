@@ -358,3 +358,22 @@ Karar kuralı:
 ```bash
 python3 backend/scripts/evidence_gate_decision.py
 ```
+
+
+---
+
+## 22) Post-Program Araçlandırma (Evidence Gate History)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_history.py`
+
+Amaç:
+- Evidence gate (`go/hold`) kararlarının zaman damgalı geçmişini tutmak.
+
+Çıktı:
+- `backend/reports/evidence_gate_history.jsonl`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_history.py
+```
