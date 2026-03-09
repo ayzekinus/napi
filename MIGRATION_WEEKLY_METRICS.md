@@ -415,24 +415,3 @@ Amaç:
 ```bash
 python3 backend/scripts/export_evidence_gate_trend_md.py
 ```
-
-
----
-
-## 25) Post-Program Araçlandırma (Evidence Gate Reporting Pipeline)
-
-Eklenen script:
-- `backend/scripts/run_evidence_gate_reporting.py`
-
-Amaç:
-- Gate history, trend JSON ve trend markdown çıktısını tek komutta üretmek.
-
-Kapsanan adımlar:
-1. `evidence_gate_history.py`
-2. `evidence_gate_trend.py`
-3. `export_evidence_gate_trend_md.py`
-
-Örnek kullanım:
-```bash
-python3 backend/scripts/run_evidence_gate_reporting.py
-```
