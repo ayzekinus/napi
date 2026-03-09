@@ -436,3 +436,42 @@ Kapsanan adımlar:
 ```bash
 python3 backend/scripts/run_evidence_gate_reporting.py
 ```
+
+
+---
+
+## 26) Post-Program Araçlandırma (Evidence Gate Report Health Check)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_report_health.py`
+
+Amaç:
+- Gate raporlama artefaktlarının (history/trend json/trend markdown) temel sağlık kontrolünü yapmak.
+
+Çıktı:
+- JSON sağlık özeti (dosya varlığı, boyut, trend temel alanları)
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_report_health.py
+```
+
+
+---
+
+## 27) Post-Program Araçlandırma (Evidence Gate CI Check)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_ci_check.py`
+
+Amaç:
+- Gate raporlama üretimi ve health check adımlarını CI uyumlu tek komutta çalıştırmak.
+
+Kapsanan adımlar:
+1. `run_evidence_gate_reporting.py`
+2. `evidence_gate_report_health.py`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_ci_check.py
+```
