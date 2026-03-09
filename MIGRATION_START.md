@@ -413,3 +413,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Evidence gate trend çıktısını ekip paylaşımına uygun hale getirmek için `backend/scripts/export_evidence_gate_trend_md.py` eklendi.
 - Script, `backend/reports/evidence_gate_trend.json` verisini markdown özete çevirir (`backend/reports/evidence_gate_trend.md`).
 - Böylece operasyon toplantılarında gate trendinin okunabilir formatta takibi kolaylaştırıldı.
+
+
+## Yeni adım (phase-72)
+- Evidence gate raporlama adımlarını tek komutta toplamak için `backend/scripts/run_evidence_gate_reporting.py` eklendi.
+- Script, sırasıyla history kaydı + trend JSON üretimi + trend markdown export akışını çalıştırır.
+- Böylece post-program gate görünürlüğü için operasyon ekipleri daha az manuel komutla rapor üretebilir.
