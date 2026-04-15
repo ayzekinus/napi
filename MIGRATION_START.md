@@ -461,3 +461,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Admin panelde model görünürlüğünü artırmak için `apps.core` ve `apps.modules` altında legacy tabloları temsil eden model/admin kayıtları eklendi.
 - Frontend tarafında global stil dosyası (`frontend/app/globals.css`) oluşturulup layout'a bağlandı.
 - Böylece admin ekranında model listeleri görünür hale gelirken dashboard sayfaları da temel tasarımsal stil kazanmış oldu.
+
+
+## Yeni adım (phase-80)
+- Admin modül listelerinde legacy tablo yoksa oluşan `OperationalError` için güvenli fallback eklendi.
+- `apps.core.admin` ve `apps.modules.admin` içinde changelist erişimi `OperationalError/ProgrammingError` durumunda uyarı mesajı verip `/admin/` sayfasına dönecek şekilde sertleştirildi.
+- Böylece Docker SQLite demo ortamında eksik legacy tablo nedeniyle admin tarafında 500 hatası yerine kontrollü kullanıcı deneyimi sağlandı.

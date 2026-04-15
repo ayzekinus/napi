@@ -561,3 +561,19 @@ Değişiklikler:
 
 Amaç:
 - Admin panelde model listelerini görünür hale getirmek ve frontend görünümünü temel global stillerle iyileştirmek.
+
+
+---
+
+## 33) Post-Program İyileştirme (Admin Missing Legacy Table Fallback)
+
+Değişiklikler:
+- `backend/apps/core/admin.py`
+- `backend/apps/modules/admin.py`
+
+Amaç:
+- Legacy tabloların bulunmadığı demo ortamında admin changelist ekranında 500 hatasını engelleyip kontrollü fallback sağlamak.
+
+Davranış:
+- `OperationalError` / `ProgrammingError` yakalanır.
+- Kullanıcıya uyarı mesajı gösterilir ve `/admin/` sayfasına yönlendirilir.
