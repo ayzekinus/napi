@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: napi-backend
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: "*"
+      DB_ENGINE: django.db.backends.sqlite3
+      DB_NAME: /app/backend/db.sqlite3
+      NEXT_PUBLIC_API_BASE_URL: http://backend:8000/api
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: napi-frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://backend:8000/api
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
