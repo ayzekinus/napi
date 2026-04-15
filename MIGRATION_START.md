@@ -449,3 +449,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Sistemin hızlı görünür demo/deploy ihtiyacı için Docker artefaktları eklendi: `backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml`, `DOCKER_DEPLOYMENT.md`.
 - Kurulum, backend ve frontend servislerini tek komutla (`docker compose up --build`) ayağa kaldıracak şekilde düzenlendi.
 - Böylece migration programı kapsamında teknik çıktılar sadece dokümantasyon değil, çalıştırılabilir bir demo ortamı da sağlar.
+
+
+## Yeni adım (phase-78)
+- Docker demo sırasında alınan `404` geri bildirimini çözmek için backend root path (`/`) endpoint'i eklendi.
+- `backend/config/urls.py` içinde `root_home` JSON yanıtı ile servis durumu ve temel API giriş noktaları görünür hale getirildi.
+- Böylece `http://localhost:8000/` çağrısında boş path hatası yerine kullanıcı dostu bir landing cevabı döndürülür.

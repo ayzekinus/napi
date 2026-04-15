@@ -532,3 +532,19 @@ Amaç:
 ```bash
 docker compose up --build
 ```
+
+
+---
+
+## 31) Post-Program İyileştirme (Backend Root Landing Endpoint)
+
+Değişiklik:
+- `backend/config/urls.py` içine root path (`/`) için JSON landing endpoint eklendi.
+
+Amaç:
+- Docker demo kullanımında `http://localhost:8000/` çağrısında 404 yerine anlaşılır servis yanıtı döndürmek.
+
+Örnek yanıt alanları:
+- `service`
+- `status`
+- `endpoints`
