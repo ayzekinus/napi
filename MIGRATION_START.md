@@ -443,3 +443,21 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Readiness snapshot çıktısını ekip paylaşımı için okunabilir hale getirmek amacıyla `backend/scripts/export_evidence_gate_readiness_md.py` eklendi.
 - Script, `evidence_gate_readiness_snapshot.json` verisini markdown rapora (`backend/reports/evidence_gate_readiness_snapshot.md`) dönüştürür.
 - Böylece gate toplantılarında hazır olma durumu tek sayfada hızlıca değerlendirilebilir.
+
+
+## Yeni adım (phase-77)
+- Sistemin hızlı görünür demo/deploy ihtiyacı için Docker artefaktları eklendi: `backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml`, `DOCKER_DEPLOYMENT.md`.
+- Kurulum, backend ve frontend servislerini tek komutla (`docker compose up --build`) ayağa kaldıracak şekilde düzenlendi.
+- Böylece migration programı kapsamında teknik çıktılar sadece dokümantasyon değil, çalıştırılabilir bir demo ortamı da sağlar.
+
+
+## Yeni adım (phase-78)
+- Docker demo sırasında alınan `404` geri bildirimini çözmek için backend root path (`/`) endpoint'i eklendi.
+- `backend/config/urls.py` içinde `root_home` JSON yanıtı ile servis durumu ve temel API giriş noktaları görünür hale getirildi.
+- Böylece `http://localhost:8000/` çağrısında boş path hatası yerine kullanıcı dostu bir landing cevabı döndürülür.
+
+
+## Yeni adım (phase-79)
+- Admin panelde model görünürlüğünü artırmak için `apps.core` ve `apps.modules` altında legacy tabloları temsil eden model/admin kayıtları eklendi.
+- Frontend tarafında global stil dosyası (`frontend/app/globals.css`) oluşturulup layout'a bağlandı.
+- Böylece admin ekranında model listeleri görünür hale gelirken dashboard sayfaları da temel tasarımsal stil kazanmış oldu.

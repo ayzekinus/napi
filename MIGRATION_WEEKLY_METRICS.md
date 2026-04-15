@@ -513,3 +513,51 @@ Amaç:
 ```bash
 python3 backend/scripts/export_evidence_gate_readiness_md.py
 ```
+
+
+---
+
+## 30) Post-Program Araçlandırma (Docker Deploy Skeleton)
+
+Eklenen artefaktlar:
+- `backend/Dockerfile`
+- `frontend/Dockerfile`
+- `docker-compose.yml`
+- `DOCKER_DEPLOYMENT.md`
+
+Amaç:
+- Backend + frontend servislerini tek komutla ayağa kaldırmak ve migration çıktılarının hızlı görünür demosunu sağlamak.
+
+Örnek kullanım:
+```bash
+docker compose up --build
+```
+
+
+---
+
+## 31) Post-Program İyileştirme (Backend Root Landing Endpoint)
+
+Değişiklik:
+- `backend/config/urls.py` içine root path (`/`) için JSON landing endpoint eklendi.
+
+Amaç:
+- Docker demo kullanımında `http://localhost:8000/` çağrısında 404 yerine anlaşılır servis yanıtı döndürmek.
+
+Örnek yanıt alanları:
+- `service`
+- `status`
+- `endpoints`
+
+
+---
+
+## 32) Post-Program İyileştirme (Admin Model Visibility + Frontend Global CSS)
+
+Değişiklikler:
+- `backend/apps/core/models.py` + `backend/apps/core/admin.py`
+- `backend/apps/modules/models.py` + `backend/apps/modules/admin.py`
+- `frontend/app/globals.css` + `frontend/app/layout.tsx`
+
+Amaç:
+- Admin panelde model listelerini görünür hale getirmek ve frontend görünümünü temel global stillerle iyileştirmek.
