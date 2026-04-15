@@ -494,3 +494,41 @@ Amaç:
 ```bash
 python3 backend/scripts/evidence_gate_readiness_snapshot.py
 ```
+
+
+---
+
+## 29) Post-Program Araçlandırma (Evidence Gate Readiness Markdown Export)
+
+Eklenen script:
+- `backend/scripts/export_evidence_gate_readiness_md.py`
+
+Amaç:
+- Readiness snapshot JSON çıktısını okunabilir markdown rapora çevirmek.
+
+Çıktı:
+- `backend/reports/evidence_gate_readiness_snapshot.md`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/export_evidence_gate_readiness_md.py
+```
+
+
+---
+
+## 30) Post-Program Araçlandırma (Docker Deploy Skeleton)
+
+Eklenen artefaktlar:
+- `backend/Dockerfile`
+- `frontend/Dockerfile`
+- `docker-compose.yml`
+- `DOCKER_DEPLOYMENT.md`
+
+Amaç:
+- Backend + frontend servislerini tek komutla ayağa kaldırmak ve migration çıktılarının hızlı görünür demosunu sağlamak.
+
+Örnek kullanım:
+```bash
+docker compose up --build
+```

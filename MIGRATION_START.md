@@ -437,3 +437,15 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Gate kararını operasyonel olarak tek raporda görmek için `backend/scripts/evidence_gate_readiness_snapshot.py` eklendi.
 - Script, `evidence_gate_report_health.py` ve `evidence_gate_decision.py` çıktılarını birleştirip `ready_for_gate` alanı ile snapshot üretir.
 - Böylece operasyon ekipleri gate onayı öncesi sağlık + karar durumunu tek JSON artefaktından takip edebilir.
+
+
+## Yeni adım (phase-76)
+- Readiness snapshot çıktısını ekip paylaşımı için okunabilir hale getirmek amacıyla `backend/scripts/export_evidence_gate_readiness_md.py` eklendi.
+- Script, `evidence_gate_readiness_snapshot.json` verisini markdown rapora (`backend/reports/evidence_gate_readiness_snapshot.md`) dönüştürür.
+- Böylece gate toplantılarında hazır olma durumu tek sayfada hızlıca değerlendirilebilir.
+
+
+## Yeni adım (phase-77)
+- Sistemin hızlı görünür demo/deploy ihtiyacı için Docker artefaktları eklendi: `backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml`, `DOCKER_DEPLOYMENT.md`.
+- Kurulum, backend ve frontend servislerini tek komutla (`docker compose up --build`) ayağa kaldıracak şekilde düzenlendi.
+- Böylece migration programı kapsamında teknik çıktılar sadece dokümantasyon değil, çalıştırılabilir bir demo ortamı da sağlar.
