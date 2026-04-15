@@ -475,3 +475,22 @@ Kapsanan adımlar:
 ```bash
 python3 backend/scripts/evidence_gate_ci_check.py
 ```
+
+
+---
+
+## 28) Post-Program Araçlandırma (Evidence Gate Readiness Snapshot)
+
+Eklenen script:
+- `backend/scripts/evidence_gate_readiness_snapshot.py`
+
+Amaç:
+- Health check ve gate decision verilerini tek snapshot raporunda birleştirmek.
+
+Çıktı:
+- `backend/reports/evidence_gate_readiness_snapshot.json`
+
+Örnek kullanım:
+```bash
+python3 backend/scripts/evidence_gate_readiness_snapshot.py
+```

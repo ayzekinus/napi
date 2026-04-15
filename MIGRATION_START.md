@@ -431,3 +431,9 @@ Bu commit, mevcut PHP tabanlı sistemden yeni mimariye geçiş için başlangı�
 - Gate raporlama sürecini CI/otomasyon için tek komuta indirmek amacıyla `backend/scripts/evidence_gate_ci_check.py` eklendi.
 - Script, `run_evidence_gate_reporting.py` ve ardından `evidence_gate_report_health.py` çalıştırarak hazır olma kontrolünü döner.
 - Böylece pipeline entegrasyonunda gate rapor üretimi + sağlık doğrulaması tek entrypoint ile yönetilebilir.
+
+
+## Yeni adım (phase-75)
+- Gate kararını operasyonel olarak tek raporda görmek için `backend/scripts/evidence_gate_readiness_snapshot.py` eklendi.
+- Script, `evidence_gate_report_health.py` ve `evidence_gate_decision.py` çıktılarını birleştirip `ready_for_gate` alanı ile snapshot üretir.
+- Böylece operasyon ekipleri gate onayı öncesi sağlık + karar durumunu tek JSON artefaktından takip edebilir.
